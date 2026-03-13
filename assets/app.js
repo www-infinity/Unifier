@@ -614,21 +614,57 @@
 
     const thinkBubble = document.createElement("div");
     thinkBubble.className = "chat-msg ai";
-    thinkBubble.innerHTML = `<span class="chat-avatar">🤖</span><span class="chat-bubble">Searching research databases…</span>`;
+    thinkBubble.innerHTML = `<span class="chat-avatar">🤖</span><span class="chat-bubble">Analyzing your research portfolio…</span>`;
     chatLog.appendChild(thinkBubble);
     chatLog.scrollTop = chatLog.scrollHeight;
 
+    const RES  = window.RESEARCH;
+    const msgL = msg.toLowerCase();
+
+    // Intent detection
+    const wantsInsight  = /insight|analysis|pattern|trend|how am i|my stats|performance|analys/.test(msgL);
+    const wantsKnowledge = /knowledge|summary|overview|what have|my research|my article|portfolio/.test(msgL);
+    const topics = ["quantum","bitcoin","hydrogen","plasma","neural","cosmic","compression",
+                    "infinity","signal","token","blockchain","cryptography","astrophysics",
+                    "materials","nanotechnology","fusion","thermodynamics"];
+    const hit = topics.find((t) => msgL.includes(t));
+
+    // Relevance score of message vs. last generated article
+    const relevScore = (lastArticle && RES && RES.scoreKeywordRelevance)
+      ? RES.scoreKeywordRelevance(msg, lastArticle) : 0;
+
     let aiReply = "";
-    // Build a research-aware reply using available RESEARCH functions
-    const keywords = lastArticle ? (lastArticle.keywords || []).slice(0, 3).join(", ") : null;
-    const topics = ["quantum", "bitcoin", "hydrogen", "plasma", "neural", "cosmic", "compression", "infinity", "signal", "token"];
-    const hit = topics.find((t) => msg.toLowerCase().includes(t));
-    if (keywords) {
-      aiReply = `Based on the latest research token "${lastArticle.title}" (IF: ${lastArticle.impactFactor}), the most relevant topics are: ${keywords}. ${hit ? `Your question about ${hit} connects directly to this research domain. ` : ""}Spin again to generate a new research token and explore different scientific domains!`;
+
+    if (wantsInsight && RES && RES.generateInsights) {
+      const ins = RES.generateInsights(sessionHistory);
+      aiReply = `📊 Insight Report — ${ins.summary} Win rate: ${ins.winRate}%. Momentum: ${ins.momentum}. ` +
+        (ins.topDomains.length ? `Top domain: ${ins.topDomains[0].domain}.` : "Spin to build domain data!");
+
+    } else if (wantsKnowledge && RES && RES.buildKnowledgeSummary) {
+      const arts = sessionHistory.map((r) => r.article).filter(Boolean);
+      aiReply = `📚 Knowledge Summary — ${RES.buildKnowledgeSummary(arts)}`;
+
+    } else if (relevScore >= 0.4 && lastArticle) {
+      const kw = (lastArticle.keywords || []).slice(0, 3).join(", ");
+      aiReply = `🔬 Strong match (${Math.round(relevScore * 100)}% relevance)! Your question connects with ` +
+        `"${lastArticle.title}" (IF: ${lastArticle.impactFactor}). Key concepts: ${kw}. ` +
+        `Open the Research Panel to read the full article.`;
+
+    } else if (lastArticle) {
+      const kw = (lastArticle.keywords || []).slice(0, 3).join(", ");
+      aiReply = `Based on the latest research token "${lastArticle.title}" (IF: ${lastArticle.impactFactor}), ` +
+        `key topics are: ${kw}. ${hit ? `Your question about ${hit} connects to this research domain. ` : ""}` +
+        `Spin again to generate a new token and explore different scientific domains!`;
+
     } else if (hit) {
-      aiReply = `I found research data on ${hit}. The field of ${hit} encompasses several cutting-edge disciplines including energy physics, computational theory, and applied materials science. Spin the slot machine to generate a detailed research token on this topic!`;
+      aiReply = `I found research data on ${hit}. The field encompasses cutting-edge disciplines including ` +
+        `energy physics, computational theory, and applied materials science. Spin the slot machine to generate ` +
+        `a detailed research token on this topic!`;
+
     } else {
-      aiReply = `Great question! I am the Infinity Research AI. Ask me about quantum physics, blockchain technology, hydrogen energy, Bitcoin, or any scientific topic. Try spinning the slot machine to generate research tokens linked to your query. I can then give you context from the generated article!`;
+      aiReply = `I am the Infinity Research AI. Ask me about your spin patterns ("show insights"), ` +
+        `your research portfolio ("knowledge summary"), or any scientific topic like quantum, bitcoin, ` +
+        `or astrophysics. Spin the slot machine to generate research tokens!`;
     }
 
     thinkBubble.querySelector(".chat-bubble").textContent = aiReply;
@@ -793,26 +829,46 @@
 
   function runAiAnalysis() {
     if (!sessionHistory.length) return;
-    const tiers = sessionHistory.map((h) => h.spinData.tier);
-    const wins  = tiers.filter((t) => t !== "lose").length;
-    const rate  = (wins / tiers.length * 100).toFixed(1);
-    const streak = (() => {
-      let s = 0;
-      for (const t of tiers) { if (t !== "lose") s++; else break; }
-      return s;
-    })();
-    setAiStatus("active", `Analyzing ${tiers.length} spins…`);
+    const RES  = window.RESEARCH;
     const pred = $("aiPrediction");
-    if (pred) {
-      pred.innerHTML = `
-        <div class="ai-stat">Win Rate: <strong>${rate}%</strong></div>
-        <div class="ai-stat">Current Streak: <strong>${streak}</strong></div>
-        <div class="ai-stat">Total Spins: <strong>${tiers.length}</strong></div>
-        <div class="ai-stat">Total Score: <strong>${totalScore}</strong></div>
-      `;
+
+    if (RES && RES.generateInsights) {
+      const ins = RES.generateInsights(sessionHistory);
+      setAiStatus("active", `Analyzing ${sessionHistory.length} spin${sessionHistory.length !== 1 ? "s" : ""}…`);
+      if (pred) {
+        pred.innerHTML = `
+          <div class="ai-stat">Win Rate: <strong>${ins.winRate}%</strong></div>
+          <div class="ai-stat">Momentum: <strong>${ins.momentum}</strong></div>
+          <div class="ai-stat">Win Streak: <strong>${ins.streakInfo.current}</strong></div>
+          <div class="ai-stat">Total Score: <strong>${totalScore}</strong></div>
+          <div class="ai-stat">Domain Diversity: <strong>${Math.round(ins.domainDiversity * 100)}%</strong></div>
+          ${ins.topDomains.length ? `<div class="ai-stat">Top Domain: <strong>${ins.topDomains[0].domain}</strong></div>` : ""}
+        `;
+      }
+      aiLog(`[Spin ${spinCount}] ${ins.summary}`);
+      setAiStatus("active", `Win rate: ${ins.winRate}% · Momentum: ${ins.momentum} · Streak: ${ins.streakInfo.current}`);
+    } else {
+      // Fallback without RESEARCH module
+      const tiers = sessionHistory.map((h) => h.spinData.tier);
+      const wins  = tiers.filter((t) => t !== "lose").length;
+      const rate  = (wins / tiers.length * 100).toFixed(1);
+      const streak = (() => {
+        let s = 0;
+        for (const t of tiers) { if (t !== "lose") s++; else break; }
+        return s;
+      })();
+      setAiStatus("active", `Analyzing ${tiers.length} spins…`);
+      if (pred) {
+        pred.innerHTML = `
+          <div class="ai-stat">Win Rate: <strong>${rate}%</strong></div>
+          <div class="ai-stat">Current Streak: <strong>${streak}</strong></div>
+          <div class="ai-stat">Total Spins: <strong>${tiers.length}</strong></div>
+          <div class="ai-stat">Total Score: <strong>${totalScore}</strong></div>
+        `;
+      }
+      aiLog(`[Spin ${spinCount}] win-rate=${rate}% streak=${streak} score=${totalScore}`);
+      setAiStatus("active", `Win rate: ${rate}% · Streak: ${streak}`);
     }
-    aiLog(`[Spin ${spinCount}] win-rate=${rate}% streak=${streak} score=${totalScore}`);
-    setAiStatus("active", `Win rate: ${rate}% · Streak: ${streak}`);
   }
 
   /* ------------------------------------------------------------------
