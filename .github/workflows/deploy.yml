@@ -30,6 +30,28 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
 
+      - name: Inject GHP token into runtime config
+        env:
+          GHP_TOKEN: ${{ secrets.GHP_TOKEN }}
+        run: |
+          python3 << 'EOF'
+          import json, os
+          token = os.environ.get('GHP_TOKEN', '')
+          if not token:
+              print('No GHP_TOKEN set — cfg.js left as placeholder.')
+              exit(0)
+          path = 'assets/cfg.js'
+          with open(path, 'r') as f:
+              content = f.read()
+          content = content.replace(
+              'window.BITCOIN_CRUSHER_TOKEN = window.BITCOIN_CRUSHER_TOKEN || "";',
+              f'window.BITCOIN_CRUSHER_TOKEN = {json.dumps(token)};'
+          )
+          with open(path, 'w') as f:
+              f.write(content)
+          print('GHP token injected into assets/cfg.js')
+          EOF
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
