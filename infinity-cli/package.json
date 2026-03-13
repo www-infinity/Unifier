@@ -1,0 +1,19 @@
+{
+  "name": "infinity-cli",
+  "version": "1.0.0",
+  "description": "Infinity Operating System CLI — control center for the Infinity Network",
+  "main": "infinity.js",
+  "bin": {
+    "infinity": "./infinity.js"
+  },
+  "scripts": {
+    "start": "node infinity.js"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^8.2.6",
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.2.0",
+    "uuid": "^9.0.1"
+  }
+}

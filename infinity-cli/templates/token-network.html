@@ -1,0 +1,32 @@
+<!-- Token Network Component -->
+<section id="token-network" style="border:1px solid #00ffcc33;padding:1.5rem;margin:1rem 0;border-radius:6px;">
+  <h2 style="color:#00ffcc;letter-spacing:0.2em;">◈ TOKEN NETWORK</h2>
+  <canvas id="token-canvas" width="600" height="300" style="width:100%;border:1px solid #00ffcc22;border-radius:4px;"></canvas>
+  <script>
+    (function(){
+      const c = document.getElementById('token-canvas')
+      const ctx = c.getContext('2d')
+      const nodes = Array.from({length:12},()=>({x:Math.random()*c.width,y:Math.random()*c.height}))
+      function draw(){
+        ctx.fillStyle='rgba(0,0,0,0.1)'
+        ctx.fillRect(0,0,c.width,c.height)
+        nodes.forEach((n,i)=>{
+          nodes.forEach((m,j)=>{
+            if(i<j){
+              ctx.strokeStyle='rgba(0,255,204,0.15)'
+              ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke()
+            }
+          })
+          ctx.fillStyle='#00ffcc'
+          ctx.beginPath();ctx.arc(n.x,n.y,4,0,Math.PI*2);ctx.fill()
+          n.x+=(Math.random()-0.5)*2
+          n.y+=(Math.random()-0.5)*2
+          n.x=Math.max(4,Math.min(c.width-4,n.x))
+          n.y=Math.max(4,Math.min(c.height-4,n.y))
+        })
+        requestAnimationFrame(draw)
+      }
+      draw()
+    })()
+  </script>
+</section>

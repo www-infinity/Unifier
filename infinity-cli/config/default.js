@@ -1,0 +1,10 @@
+const path = require("path")
+
+module.exports = {
+  spinsDir: path.resolve(__dirname, "../spins"),
+  tokensDir: path.resolve(__dirname, "../tokens"),
+  walletsDir: path.resolve(__dirname, "../wallets"),
+  outputDir: path.resolve(__dirname, "../output"),
+  templatesDir: path.resolve(__dirname, "../templates"),
+  treasuryFile: path.resolve(__dirname, "../data/treasury.json"),
+}
