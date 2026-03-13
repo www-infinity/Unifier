@@ -38,7 +38,7 @@ jobs:
           import json, os
           token = os.environ.get('GHP_TOKEN', '')
           if not token:
-              print('No GHP_TOKEN set — cfg.js left as placeholder.')
+              print('::warning::GHP_TOKEN secret is not configured. Spin commits will be disabled. Add a GitHub PAT with actions:write scope as the GHP_TOKEN repository secret.')
               exit(0)
           path = 'assets/cfg.js'
           with open(path, 'r') as f:
