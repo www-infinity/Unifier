@@ -1,3 +1,4 @@
+/* =====================================================================
    Bitcoin Crusher — Research Article Generator
    research.js — generates scientific research articles for every spin
    Uses DuckDuckGo Instant Answer API + Archive.org for enrichment

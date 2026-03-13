@@ -25,6 +25,7 @@
   ];
 
   const REEL_COUNT    = 5;
+  /** Must match `.reel` and `.reel-symbol` height in assets/style.css */
   const SYMBOL_HEIGHT = 160;
 
   /* ------------------------------------------------------------------
@@ -153,6 +154,7 @@
       return null;
     }
     const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    // ts retains the ISO 'T' separator: e.g. 2026-03-13T11-43-20
     const filename = `spins/spin-${ts}.json`;
     if (!/^spins\/spin-[\dT-]+\.json$/.test(filename)) {
       log("❌ Invalid spin filename — aborting commit.", "err");
@@ -498,9 +500,19 @@
 
     // Generate research article
     let article = null;
-    if (window.RESEARCH) {
+    if (window.RESEARCH && window.RESEARCH.generateResearchArticle) {
       try {
-        article = await window.RESEARCH.generate(spinData, finals.map((s) => s.label));
+        const spinDataForResearch = Object.assign({}, spinData, {
+          symbolLabels: finals.map((s) => s.label),
+        });
+        article = window.RESEARCH.generateResearchArticle(spinDataForResearch);
+        // Enrich asynchronously (non-blocking)
+        if (window.RESEARCH.enrichWithSearch) {
+          window.RESEARCH.enrichWithSearch(article).then((enriched) => {
+            lastArticle = enriched;
+            renderResearchPreview(enriched);
+          }).catch(() => {});
+        }
         lastArticle = article;
         renderResearchPreview(article);
         log(`🔬 Research token generated: "${article.title}"`, "ok");
@@ -607,19 +619,16 @@
     chatLog.scrollTop = chatLog.scrollHeight;
 
     let aiReply = "";
-    if (window.RESEARCH && window.RESEARCH.chatResponse) {
-      try {
-        aiReply = await window.RESEARCH.chatResponse(msg);
-      } catch (e) {
-        aiReply = `Error: ${e.message}`;
-      }
+    // Build a research-aware reply using available RESEARCH functions
+    const keywords = lastArticle ? (lastArticle.keywords || []).slice(0, 3).join(", ") : null;
+    const topics = ["quantum", "bitcoin", "hydrogen", "plasma", "neural", "cosmic", "compression", "infinity", "signal", "token"];
+    const hit = topics.find((t) => msg.toLowerCase().includes(t));
+    if (keywords) {
+      aiReply = `Based on the latest research token "${lastArticle.title}" (IF: ${lastArticle.impactFactor}), the most relevant topics are: ${keywords}. ${hit ? `Your question about ${hit} connects directly to this research domain. ` : ""}Spin again to generate a new research token and explore different scientific domains!`;
+    } else if (hit) {
+      aiReply = `I found research data on ${hit}. The field of ${hit} encompasses several cutting-edge disciplines including energy physics, computational theory, and applied materials science. Spin the slot machine to generate a detailed research token on this topic!`;
     } else {
-      // Basic fallback
-      const topics = ["quantum", "bitcoin", "hydrogen", "plasma", "neural", "cosmic", "compression"];
-      const hit = topics.find((t) => msg.toLowerCase().includes(t));
-      aiReply = hit
-        ? `I found research data on ${hit}. The field of ${hit} encompasses several cutting-edge disciplines including energy physics, computational theory, and applied materials science. Spin the slot machine to generate a detailed research token on this topic!`
-        : `Great question! I am the Infinity Research AI. Ask me about quantum physics, blockchain technology, hydrogen energy, or any scientific topic. Try spinning the slot machine to generate research tokens linked to your query.`;
+      aiReply = `Great question! I am the Infinity Research AI. Ask me about quantum physics, blockchain technology, hydrogen energy, Bitcoin, or any scientific topic. Try spinning the slot machine to generate research tokens linked to your query. I can then give you context from the generated article!`;
     }
 
     thinkBubble.querySelector(".chat-bubble").textContent = aiReply;

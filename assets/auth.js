@@ -9,6 +9,10 @@ window.AUTH = (() => {
 
   const USERS_KEY      = "bc_users_v1";
   const SESSION_KEY    = "bc_session_v1";
+  /* Bootstrap admin account — these are the default credentials for the
+     project owner's account, stored only in the local browser.  Passwords
+     are SHA-256 hashed before being persisted; the plaintext is only used
+     once during the first `ensureAdmin()` call to seed the account. */
   const ADMIN_USERNAME = "Kris";
   const ADMIN_EMAIL    = "tigerbalm7623@gmail.com";
   const ADMIN_PASSWORD = "Kris";
