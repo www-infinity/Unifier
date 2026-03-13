@@ -210,7 +210,7 @@
 
     let autoRotate = 0;
     let mouseDown = false, lastMX = 0;
-    canvas.addEventListener('mousedown', e => { mouseDown = true; lastMX = e.clientX; });
+    canvas.addEventListener('mousedown', e => { e.preventDefault(); mouseDown = true; lastMX = e.clientX; });
     window.addEventListener('mouseup',   () => { mouseDown = false; });
     canvas.addEventListener('mousemove', e => {
       if (!mouseDown) return;

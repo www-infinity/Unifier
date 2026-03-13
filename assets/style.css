@@ -1015,6 +1015,8 @@ body {
   display: block;
   border-radius: var(--r-sm);
   background: rgba(0,0,0,.4);
+  touch-action: none;
+  user-select: none;
 }
 #node-tooltip {
   position: fixed;
