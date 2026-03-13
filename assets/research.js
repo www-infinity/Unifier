@@ -685,6 +685,136 @@ ${spinCards}
 </html>`;
   }
 
+  /* ------------------------------------------------------------------
+     AI INSIGHTS — Analyses spin/article history for intelligent summaries
+  ------------------------------------------------------------------ */
+  function generateInsights(spinRecords) {
+    if (!spinRecords || !spinRecords.length) {
+      return {
+        summary: "No spin history yet. Start spinning to generate research insights!",
+        winRate: 0,
+        topDomains: [],
+        streakInfo: { current: 0, longest: 0, type: "neutral" },
+        domainDiversity: 0,
+        momentum: "neutral",
+      };
+    }
+    const total = spinRecords.length;
+    const wins = spinRecords.filter((r) => (r.spinData || r).tier !== "lose").length;
+    const winRate = total > 0 ? wins / total : 0;
+
+    // Domain frequency analysis
+    const domainCount = {};
+    spinRecords.forEach((r) => {
+      const art = r.article || r.researchArticle;
+      if (art && art.domains) {
+        art.domains.forEach((d) => { domainCount[d] = (domainCount[d] || 0) + 1; });
+      }
+    });
+    const topDomains = Object.entries(domainCount)
+      .sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(([domain, count]) => ({ domain: domain.replace(/_/g, " "), count }));
+
+    // Streak analysis
+    const tiers = spinRecords.map((r) => (r.spinData || r).tier);
+    let currentStreak = 0, longestStreak = 0, tempStreak = 0;
+    for (let i = tiers.length - 1; i >= 0; i--) {
+      if (tiers[i] !== "lose") currentStreak++;
+      else break;
+    }
+    for (const t of tiers) {
+      if (t !== "lose") { tempStreak++; longestStreak = Math.max(longestStreak, tempStreak); }
+      else tempStreak = 0;
+    }
+
+    // Domain diversity score (0–1, 12 domains = full diversity)
+    const uniqueDomains = Object.keys(domainCount).length;
+    const domainDiversity = Math.min(1, uniqueDomains / 12);
+
+    // Momentum: win rate of the last 5 spins
+    const recent = tiers.slice(-5);
+    const recentWins = recent.filter((t) => t !== "lose").length;
+    const momentum = recentWins >= 4 ? "hot" : recentWins >= 2 ? "warm" : recentWins === 0 ? "cold" : "neutral";
+
+    const momentumPhrases = {
+      hot:     "momentum is exceptionally strong — a quantum breakthrough is imminent",
+      warm:    "showing a positive upward trend",
+      cold:    "entering a resting phase — a discovery surge may be near",
+      neutral: "maintaining steady research equilibrium",
+    };
+    const diversityDesc = domainDiversity > 0.7
+      ? "highly diverse cross-disciplinary profile"
+      : domainDiversity > 0.4
+        ? "moderately diverse research portfolio"
+        : "focused single-domain research concentration";
+
+    const summary = [
+      `Analysis of ${total} spin${total !== 1 ? "s" : ""} reveals a ${(winRate * 100).toFixed(1)}% discovery rate.`,
+      topDomains.length ? `Primary domain: ${topDomains[0].domain} (${topDomains[0].count} article${topDomains[0].count !== 1 ? "s" : ""}).` : "",
+      `Research portfolio exhibits a ${diversityDesc}.`,
+      `Current trajectory: ${momentumPhrases[momentum]}.`,
+      currentStreak > 1 ? `Active win streak: ${currentStreak} consecutive discoveries.` : "",
+      longestStreak > 1 ? `Peak win streak on record: ${longestStreak}.` : "",
+    ].filter(Boolean).join(" ");
+
+    return {
+      summary,
+      winRate:         parseFloat((winRate * 100).toFixed(1)),
+      topDomains,
+      streakInfo:      { current: currentStreak, longest: longestStreak, type: currentStreak > 0 ? "win" : "neutral" },
+      domainDiversity: parseFloat(domainDiversity.toFixed(2)),
+      momentum,
+    };
+  }
+
+  /* ------------------------------------------------------------------
+     KEYWORD RELEVANCE SCORER — rates how well a user query matches an article
+  ------------------------------------------------------------------ */
+  function scoreKeywordRelevance(query, article) {
+    if (!query || !article) return 0;
+    const words = query.toLowerCase().split(/\W+/).filter((w) => w.length > 2);
+    if (!words.length) return 0;
+    const corpus = [
+      article.title || "",
+      (article.keywords || []).join(" "),
+      article.abstract || "",
+      (article.domains || []).join(" ").replace(/_/g, " "),
+      (article.introduction || "").slice(0, 400),
+    ].join(" ").toLowerCase();
+    const matches = words.filter((w) => corpus.includes(w)).length;
+    return parseFloat((matches / words.length).toFixed(2));
+  }
+
+  /* ------------------------------------------------------------------
+     KNOWLEDGE SUMMARY BUILDER — synthesises insights across multiple articles
+  ------------------------------------------------------------------ */
+  function buildKnowledgeSummary(articles) {
+    if (!articles || !articles.length) {
+      return "No research tokens generated yet. Spin to begin building your knowledge base!";
+    }
+    const domainCount = {};
+    const kwFreq = {};
+    let totalIF = 0;
+    articles.forEach((a) => {
+      (a.domains  || []).forEach((d) => { domainCount[d] = (domainCount[d] || 0) + 1; });
+      (a.keywords || []).forEach((k) => { kwFreq[k]      = (kwFreq[k]      || 0) + 1; });
+      totalIF += (a.impactFactor || 0);
+    });
+    const topDomains = Object.entries(domainCount)
+      .sort((a, b) => b[1] - a[1]).slice(0, 3)
+      .map(([d]) => d.replace(/_/g, " "));
+    const topKw = Object.entries(kwFreq)
+      .sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(([k]) => k);
+    const avgIF = (totalIF / articles.length).toFixed(1);
+    return [
+      `Knowledge base: ${articles.length} research token${articles.length !== 1 ? "s" : ""} spanning ${Object.keys(domainCount).length} scientific domain${Object.keys(domainCount).length !== 1 ? "s" : ""}.`,
+      topDomains.length ? `Dominant disciplines: ${topDomains.join(", ")}.` : "",
+      topKw.length      ? `Recurring concepts: ${topKw.join(", ")}.`         : "",
+      `Average impact factor: ${avgIF}.`,
+    ].filter(Boolean).join(" ");
+  }
+
   function escH(s) {
     return String(s || "").replace(
       /[&<>"']/g,
@@ -712,5 +842,8 @@ ${spinCards}
     searchDDG,
     searchArchive,
     downloadExport,
+    generateInsights,
+    scoreKeywordRelevance,
+    buildKnowledgeSummary,
   };
 })();

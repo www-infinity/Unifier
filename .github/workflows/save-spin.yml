@@ -1,0 +1,47 @@
+name: Save Spin
+
+on:
+  workflow_dispatch:
+    inputs:
+      spin_data:
+        description: 'JSON spin record'
+        required: true
+      filename:
+        description: 'Target file path (e.g. spins/spin-2026-03-13T11-43-20.json)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  save:
+    name: Commit spin record to repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Validate filename
+        env:
+          FILENAME: ${{ github.event.inputs.filename }}
+        run: |
+          if ! printf '%s' "$FILENAME" | grep -qE '^spins/spin-[0-9T-]+\.json$'; then
+            echo "::error::Invalid spin filename: $FILENAME — must match spins/spin-<timestamp>.json"
+            exit 1
+          fi
+
+      - name: Write and commit spin record
+        env:
+          SPIN_DATA: ${{ github.event.inputs.spin_data }}
+          FILENAME: ${{ github.event.inputs.filename }}
+        run: |
+          mkdir -p "$(dirname "$FILENAME")"
+          printf '%s\n' "$SPIN_DATA" > "$FILENAME"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$FILENAME"
+          git diff --cached --quiet && echo "Spin already recorded — nothing to commit." || \
+            git commit -m "ci: save spin $FILENAME [skip ci]"
+          git push
