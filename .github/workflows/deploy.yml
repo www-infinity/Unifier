@@ -33,23 +33,34 @@ jobs:
       - name: Inject GHP token into runtime config
         env:
           GHP_TOKEN: ${{ secrets.GHP_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
         run: |
           python3 << 'EOF'
           import json, os
-          token = os.environ.get('GHP_TOKEN', '')
-          if not token:
-              print('::warning::GHP_TOKEN secret is not configured. Spin commits will be disabled. Add a GitHub PAT with actions:write scope as the GHP_TOKEN repository secret.')
-              exit(0)
+          token    = os.environ.get('GHP_TOKEN', '')
+          owner    = os.environ.get('REPO_OWNER', '')
+          repo     = os.environ.get('REPO_NAME', '')
+          site_url = f'https://{owner}.github.io/{repo}/' if owner and repo else ''
           path = 'assets/cfg.js'
           with open(path, 'r') as f:
               content = f.read()
-          content = content.replace(
-              'window.BITCOIN_CRUSHER_TOKEN = window.BITCOIN_CRUSHER_TOKEN || "";',
-              f'window.BITCOIN_CRUSHER_TOKEN = {json.dumps(token)};'
-          )
+          if token:
+              content = content.replace(
+                  'window.BITCOIN_CRUSHER_TOKEN = window.BITCOIN_CRUSHER_TOKEN || "";',
+                  f'window.BITCOIN_CRUSHER_TOKEN = {json.dumps(token)};'
+              )
+              print('GHP token injected into assets/cfg.js')
+          else:
+              print('::warning::GHP_TOKEN secret is not configured. Spin commits will be disabled. Add a GitHub PAT with actions:write scope as the GHP_TOKEN repository secret.')
+          if site_url:
+              content = content.replace(
+                  'window.SITE_URL = window.SITE_URL || "";',
+                  f'window.SITE_URL = {json.dumps(site_url)};'
+              )
+              print(f'Site URL injected into assets/cfg.js: {site_url}')
           with open(path, 'w') as f:
               f.write(content)
-          print('GHP token injected into assets/cfg.js')
           EOF
 
       - name: Deploy to GitHub Pages
