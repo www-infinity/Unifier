@@ -1,0 +1,78 @@
+{
+  "tokens": [
+    {
+      "id": "1050",
+      "type": "research",
+      "value": 1800,
+      "date": "2026-03-10",
+      "links": ["1051", "1052"],
+      "terms": ["fusion", "energy", "plasma"],
+      "title": "Plasma Fusion Research",
+      "spinId": "spin-0001",
+      "source": "arXiv:2603.10001"
+    },
+    {
+      "id": "1051",
+      "type": "discovery",
+      "value": 2200,
+      "date": "2026-03-11",
+      "links": ["1050", "1053"],
+      "terms": ["hydrogen", "oxide", "compression"],
+      "title": "Hydrogen Compression Discovery",
+      "spinId": "spin-0002",
+      "source": "nature:2603.11002"
+    },
+    {
+      "id": "1052",
+      "type": "economic",
+      "value": 3100,
+      "date": "2026-03-11",
+      "links": ["1050", "1054"],
+      "terms": ["fusion", "energy", "market"],
+      "title": "Fusion Energy Market Index",
+      "spinId": "spin-0003",
+      "source": "econ:2603.11003"
+    },
+    {
+      "id": "1053",
+      "type": "science",
+      "value": 1400,
+      "date": "2026-03-12",
+      "links": ["1051", "1055"],
+      "terms": ["hydrogen", "compression", "quantum"],
+      "title": "Quantum Compression Study",
+      "spinId": "spin-0004",
+      "source": "science:2603.12004"
+    },
+    {
+      "id": "1054",
+      "type": "research",
+      "value": 2593,
+      "date": "2026-03-13",
+      "links": ["1052", "1055"],
+      "terms": ["hydrogen", "oxide", "compression"],
+      "title": "Hydrogen Oxide Compression",
+      "spinId": "spin-0005",
+      "source": "arXiv:2603.13005"
+    },
+    {
+      "id": "1055",
+      "type": "archive",
+      "value": 900,
+      "date": "2026-03-13",
+      "links": ["1053", "1054"],
+      "terms": ["quantum", "compression", "archive"],
+      "title": "Quantum Archive Index",
+      "spinId": "spin-0006",
+      "source": "archive:2603.13006"
+    }
+  ],
+  "spins": [
+    { "id": "spin-0001", "timestamp": "2026-03-10T08:00:00Z", "result": "🧱🧱⭐", "tokenId": "1050" },
+    { "id": "spin-0002", "timestamp": "2026-03-11T09:15:00Z", "result": "⭐⭐🧱", "tokenId": "1051" },
+    { "id": "spin-0003", "timestamp": "2026-03-11T11:30:00Z", "result": "💲💲💲", "tokenId": "1052" },
+    { "id": "spin-0004", "timestamp": "2026-03-12T14:00:00Z", "result": "🧬🧬⭐", "tokenId": "1053" },
+    { "id": "spin-0005", "timestamp": "2026-03-13T08:42:00Z", "result": "🧱⭐🧱", "tokenId": "1054" },
+    { "id": "spin-0006", "timestamp": "2026-03-13T10:00:00Z", "result": "📜📜📜", "tokenId": "1055" }
+  ]
+}

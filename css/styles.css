@@ -1,0 +1,410 @@
+/* =============================================
+   UNIFIER — Quantum Slot Universe Stylesheet
+   ============================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-deep:      #050510;
+  --bg-card:      #0a0a1e;
+  --bg-panel:     #0d0d28;
+  --accent-gold:  #f5c518;
+  --accent-cyan:  #00e5ff;
+  --accent-purple:#a855f7;
+  --text-primary: #e2e8f0;
+  --text-muted:   #64748b;
+  --border:       rgba(0, 229, 255, 0.15);
+
+  /* token type colours */
+  --color-research:  #ff6b35;
+  --color-discovery: #f5c518;
+  --color-economic:  #22c55e;
+  --color-science:   #a855f7;
+  --color-archive:   #3b82f6;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Courier New', Courier, monospace;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 3px; }
+
+/* ── Header ─────────────────────────────────── */
+#site-header {
+  position: relative;
+  z-index: 100;
+  text-align: center;
+  padding: 24px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(0,229,255,0.05) 0%, transparent 100%);
+}
+
+#site-header h1 {
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  letter-spacing: 0.2em;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#site-header p {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+}
+
+/* ── Quantum Field ──────────────────────────── */
+#quantum-field {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#quantum-field canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Main layout ────────────────────────────── */
+#app {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 24px;
+}
+
+/* ── Slot Machine ───────────────────────────── */
+#slot-machine {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.08);
+  text-align: center;
+}
+
+#slot-machine h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  color: var(--accent-gold);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+#reels {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.reel {
+  width: 72px;
+  height: 72px;
+  background: var(--bg-deep);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: transform 0.1s;
+  position: relative;
+  overflow: hidden;
+}
+
+.reel.spinning {
+  animation: reelSpin 0.15s linear infinite;
+}
+
+@keyframes reelSpin {
+  0%   { transform: translateY(-4px); }
+  50%  { transform: translateY(4px); }
+  100% { transform: translateY(-4px); }
+}
+
+#spin-btn {
+  display: inline-block;
+  padding: 12px 36px;
+  background: linear-gradient(135deg, #f5c518, #ff6b35);
+  color: #050510;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  text-transform: uppercase;
+}
+
+#spin-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 24px rgba(245, 197, 24, 0.5);
+}
+
+#spin-btn:active { transform: scale(0.97); }
+#spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+#slot-result {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  min-height: 18px;
+  letter-spacing: 0.1em;
+}
+
+#slot-result.win {
+  color: var(--accent-gold);
+  text-shadow: 0 0 8px var(--accent-gold);
+}
+
+/* ── Token Network Canvas ───────────────────── */
+#token-network {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  min-height: 460px;
+}
+
+#token-network h2 {
+  position: absolute;
+  top: 16px; left: 20px;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+#network-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+/* Tooltip */
+#node-tooltip {
+  position: absolute;
+  background: rgba(10, 10, 30, 0.92);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 20;
+  max-width: 200px;
+  line-height: 1.6;
+}
+
+#node-tooltip.visible { opacity: 1; }
+
+#node-tooltip .tt-id    { color: var(--accent-gold); font-weight: 700; }
+#node-tooltip .tt-title { color: var(--text-primary); }
+#node-tooltip .tt-type  { color: var(--text-muted); }
+#node-tooltip .tt-terms { color: var(--accent-cyan); }
+#node-tooltip .tt-spin  { color: var(--accent-purple); }
+
+/* ── Stats / Info ───────────────────────────── */
+#stats {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+#stats h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px;
+  background: var(--bg-panel);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+/* ── Token Feed ─────────────────────────────── */
+#token-feed {
+  grid-column: 1 / 3;
+  grid-row: 3 / 4;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+#token-feed h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+#feed-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-panel);
+  border-radius: 6px;
+  border-left: 3px solid var(--border);
+  font-size: 0.75rem;
+  animation: feedIn 0.4s ease-out;
+}
+
+@keyframes feedIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.feed-item.research  { border-left-color: var(--color-research); }
+.feed-item.discovery { border-left-color: var(--color-discovery); }
+.feed-item.economic  { border-left-color: var(--color-economic); }
+.feed-item.science   { border-left-color: var(--color-science); }
+.feed-item.archive   { border-left-color: var(--color-archive); }
+
+.feed-icon { font-size: 1rem; }
+.feed-text { flex: 1; color: var(--text-primary); }
+.feed-time { color: var(--text-muted); font-size: 0.65rem; }
+
+/* ── Legend ─────────────────────────────────── */
+#legend {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(10,10,30,0.88);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  z-index: 50;
+  font-size: 0.7rem;
+}
+
+#legend h3 {
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Spin wave overlay ──────────────────────── */
+#wave-overlay {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.wave-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--accent-cyan);
+  transform: translate(-50%, -50%);
+  animation: waveExpand 1.4s ease-out forwards;
+}
+
+@keyframes waveExpand {
+  0%   { width: 0;    height: 0;    opacity: 0.8; }
+  100% { width: 600px; height: 600px; opacity: 0; }
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 768px) {
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  #token-network {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    min-height: 340px;
+  }
+  #stats { grid-row: 3 / 4; grid-column: 1 / 2; }
+  #token-feed { grid-column: 1 / 2; grid-row: 4 / 5; }
+  #legend { display: none; }
+}

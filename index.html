@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNIFIER — Quantum Token Universe</title>
+  <meta name="description" content="Bitcoin slot machine + quantum particle field + token network constellation. Every spin creates research tokens that form a living knowledge graph." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       LAYER 1 — Quantum particle field (fixed bg)
+       ═══════════════════════════════════════════ -->
+  <div id="quantum-field" aria-hidden="true">
+    <canvas id="qf-canvas"></canvas>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       LAYER 2 — Spin wave overlay
+       ═══════════════════════════════════════════ -->
+  <div id="wave-overlay" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════ -->
+  <header id="site-header">
+    <h1>⬡ UNIFIER</h1>
+    <p>QUANTUM TOKEN UNIVERSE · RESEARCH FIELD GENERATOR</p>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════ -->
+  <main id="app">
+
+    <!-- ── Bitcoin Slot Machine ──────────────────── -->
+    <section id="slot-machine" aria-label="Bitcoin Slot Machine">
+      <h2>₿ BITCOIN SLOT</h2>
+      <div id="reels" aria-live="polite">
+        <div class="reel" aria-label="Reel 1">₿</div>
+        <div class="reel" aria-label="Reel 2">⭐</div>
+        <div class="reel" aria-label="Reel 3">🧱</div>
+      </div>
+      <button id="spin-btn" aria-label="Spin the slot machine">
+        ↻ SPIN
+      </button>
+      <p id="slot-result" aria-live="assertive"></p>
+    </section>
+
+    <!-- ── LAYER 3 — Token Network Graph ─────────── -->
+    <section id="token-network" aria-label="Token Network Constellation">
+      <h2>◈ TOKEN NETWORK</h2>
+      <canvas id="network-canvas"></canvas>
+      <div id="node-tooltip" role="tooltip" aria-hidden="true"></div>
+    </section>
+
+    <!-- ── Stats ─────────────────────────────────── -->
+    <section id="stats" aria-label="Universe Statistics">
+      <h2>◉ UNIVERSE STATS</h2>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="stat-spins">0</div>
+          <div class="stat-label">Spins</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-tokens">0</div>
+          <div class="stat-label">Tokens</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-value">0</div>
+          <div class="stat-label">Total Value</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-nodes">0</div>
+          <div class="stat-label">Network Nodes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LAYER 4 — Token Feed ───────────────────── -->
+    <section id="token-feed" aria-label="Token Feed">
+      <h2>◎ TOKEN FEED</h2>
+      <ul id="feed-list" aria-live="polite" aria-label="Recent token events"></ul>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       TOKEN TYPE LEGEND
+       ═══════════════════════════════════════════ -->
+  <aside id="legend" aria-label="Token type legend">
+    <h3>Token Types</h3>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#ff6b35"></div>
+      <span>🧱 Research</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#f5c518"></div>
+      <span>⭐ Discovery</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#22c55e"></div>
+      <span>💲 Economic</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#a855f7"></div>
+      <span>🧬 Science</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#3b82f6"></div>
+      <span>📜 Archive</span>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+       Three.js loaded from CDN (MIT licence).
+       All other scripts are local.
+       ═══════════════════════════════════════════ -->
+
+  <!-- Three.js r128 via CDN (progressive enhancement — 2D fallback used when unavailable).
+       SRI hash omitted because this is optional; the full 2D canvas fallback in
+       js/token-network.js runs when Three.js is unavailable. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer">
+  </script>
+
+  <!-- Quantum particle field (Layer 1) -->
+  <script src="js/quantum-field.js" defer></script>
+
+  <!-- Token network 3-D graph (Layer 3) -->
+  <script src="js/token-network.js" defer></script>
+
+  <!-- Bitcoin slot machine (Layer 4) -->
+  <script src="js/slot-machine.js" defer></script>
+
+  <!-- App bootstrap (loads JSON, seeds feed) -->
+  <script src="js/app.js" defer></script>
+
+</body>
+</html>
