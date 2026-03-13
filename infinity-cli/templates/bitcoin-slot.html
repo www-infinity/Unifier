@@ -1,0 +1,19 @@
+<!-- Bitcoin Slot Component -->
+<section id="bitcoin-slot" style="border:1px solid #f7931a33;padding:1.5rem;margin:1rem 0;border-radius:6px;">
+  <h2 style="color:#f7931a;letter-spacing:0.2em;">₿ BITCOIN SLOT</h2>
+  <div id="slot-reels" style="display:flex;gap:1rem;font-size:2rem;justify-content:center;padding:1rem;">
+    <span class="reel">₿</span>
+    <span class="reel">₿</span>
+    <span class="reel">₿</span>
+  </div>
+  <button onclick="spinSlot()" style="background:#f7931a;color:#000;border:none;padding:0.5rem 2rem;font-family:monospace;cursor:pointer;border-radius:4px;margin-top:0.5rem;">
+    SPIN
+  </button>
+  <script>
+    const SYMBOLS = ['₿','∞','◈','⬡','★','✦']
+    function spinSlot() {
+      const reels = document.querySelectorAll('#bitcoin-slot .reel')
+      reels.forEach(r => { r.textContent = SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)] })
+    }
+  </script>
+</section>

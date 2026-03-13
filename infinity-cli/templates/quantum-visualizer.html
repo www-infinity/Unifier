@@ -1,0 +1,27 @@
+<!-- Quantum Visualizer Component -->
+<section id="quantum-visualizer" style="border:1px solid #aa00ff33;padding:1.5rem;margin:1rem 0;border-radius:6px;">
+  <h2 style="color:#cc66ff;letter-spacing:0.2em;">⚛ QUANTUM VISUALIZER</h2>
+  <canvas id="quantum-canvas" width="600" height="300" style="width:100%;border:1px solid #aa00ff22;border-radius:4px;"></canvas>
+  <script>
+    (function(){
+      const c = document.getElementById('quantum-canvas')
+      const ctx = c.getContext('2d')
+      let t = 0
+      function draw(){
+        ctx.fillStyle='rgba(0,0,0,0.04)'
+        ctx.fillRect(0,0,c.width,c.height)
+        for(let i=0;i<80;i++){
+          const angle = (i/80)*Math.PI*2 + t
+          const r = 100 + Math.sin(t*2+i*0.3)*50
+          const x = c.width/2 + Math.cos(angle)*r
+          const y = c.height/2 + Math.sin(angle)*r
+          ctx.strokeStyle=`hsl(${270+i*2},80%,60%)`
+          ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.stroke()
+        }
+        t+=0.015
+        requestAnimationFrame(draw)
+      }
+      draw()
+    })()
+  </script>
+</section>
