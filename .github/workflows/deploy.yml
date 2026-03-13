@@ -1,0 +1,122 @@
+name: Auto-Sync & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Run at 00:00 UTC every day to pull latest data/tokens
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      sync_repos:
+        description: 'Comma-separated list of additional repo slugs to sync (owner/repo)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  # ──────────────────────────────────────────────────────────
+  # 1. Deploy to GitHub Pages
+  # ──────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          exclude_assets: '.github,*.md'
+          enable_jekyll: false
+          commit_message: 'ci: deploy ${{ github.sha }}'
+
+  # ──────────────────────────────────────────────────────────
+  # 2. Auto-sync token data from other active repos
+  #    Add repo slugs to the matrix below to include them.
+  # ──────────────────────────────────────────────────────────
+  sync:
+    name: Sync repos
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout Unifier
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Merge token data from sibling repos
+        env:
+          GH_TOKEN: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+          EXTRA_REPOS: ${{ github.event.inputs.sync_repos }}
+        run: |
+          node - <<'EOF'
+          const { execSync } = require('child_process');
+          const fs   = require('fs');
+          const path = require('path');
+
+          // Repos to sync — add entries here or pass via workflow_dispatch input
+          const extraRepos = (process.env.EXTRA_REPOS || '')
+            .split(',')
+            .map(r => r.trim())
+            .filter(Boolean);
+
+          const syncRepos = [...extraRepos];
+
+          if (syncRepos.length === 0) {
+            console.log('No additional repos configured for sync.');
+            process.exit(0);
+          }
+
+          const networkFile = path.join(process.cwd(), 'data', 'token_network.json');
+          const network = JSON.parse(fs.readFileSync(networkFile, 'utf8'));
+          const existingIds = new Set(network.tokens.map(t => t.id));
+
+          syncRepos.forEach(slug => {
+            try {
+              console.log(`Syncing ${slug}…`);
+              const raw = execSync(
+                `gh api repos/${slug}/contents/data/token_network.json --jq '.content' | base64 -d`,
+                { env: { ...process.env }, encoding: 'utf8' }
+              );
+              const remote = JSON.parse(raw);
+              (remote.tokens || []).forEach(t => {
+                if (!existingIds.has(t.id)) {
+                  network.tokens.push(t);
+                  existingIds.add(t.id);
+                }
+              });
+              (remote.spins || []).forEach(s => {
+                const exists = network.spins.some(x => x.id === s.id);
+                if (!exists) network.spins.push(s);
+              });
+            } catch (err) {
+              console.warn(`Could not sync ${slug}: ${err.message}`);
+            }
+          });
+
+          fs.writeFileSync(networkFile, JSON.stringify(network, null, 2) + '\n');
+          console.log(`token_network.json updated — ${network.tokens.length} tokens total.`);
+          EOF
+
+      - name: Commit updated token data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/token_network.json
+          git diff --cached --quiet && echo "No changes to commit." || \
+            git commit -m "ci: auto-sync token data [skip ci]"
+          git push
