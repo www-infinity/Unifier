@@ -3,141 +3,487 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UNIFIER — Quantum Token Universe</title>
-  <meta name="description" content="Bitcoin slot machine + quantum particle field + token network constellation. Every spin creates research tokens that form a living knowledge graph." />
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>⬡ UNIFIER — ∞ Infinity Slot Machine + Token Wallet + Research Writer</title>
+  <meta name="description" content="Unifier — Bitcoin Crusher slot machine, token wallet, research writer, AI chat, token network constellation. Unifies all www-infinity active repos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <!-- Unified stylesheet (Bitcoin-Crusher + Unifier theme) -->
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
 
   <!-- ═══════════════════════════════════════════
-       LAYER 1 — Quantum particle field (fixed bg)
+       BACKGROUND LAYERS
        ═══════════════════════════════════════════ -->
+  <!-- Quantum particle field (fixed bg — Layer 0) -->
   <div id="quantum-field" aria-hidden="true">
     <canvas id="qf-canvas"></canvas>
   </div>
-
-  <!-- ═══════════════════════════════════════════
-       LAYER 2 — Spin wave overlay
-       ═══════════════════════════════════════════ -->
+  <!-- Spin wave overlay -->
   <div id="wave-overlay" aria-hidden="true"></div>
+  <!-- Bitcoin-Crusher grid/glow background -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+  </div>
 
   <!-- ═══════════════════════════════════════════
-       HEADER
+       HAMBURGER DRAWER — links to all active repos
        ═══════════════════════════════════════════ -->
-  <header id="site-header">
-    <h1>⬡ UNIFIER</h1>
-    <p>QUANTUM TOKEN UNIVERSE · RESEARCH FIELD GENERATOR</p>
+  <div class="ham-overlay" id="hamOverlay"></div>
+  <nav class="ham-drawer" id="hamDrawer" aria-label="Navigation" aria-hidden="true">
+    <div class="ham-head">
+      <span class="ham-brand">⬡ Unifier · ∞ Infinity</span>
+      <button class="ham-close" id="hamClose" aria-label="Close menu">✕</button>
+    </div>
+
+    <div class="ham-section-label">🎰 Slot Machines</div>
+    <a class="ham-link" href="https://www-infinity.github.io/Bitcoin-Crusher/" target="_blank" rel="noopener noreferrer">₿ Bitcoin Crusher</a>
+    <a class="ham-link" href="https://www-infinity.github.io/Unifier/" target="_blank" rel="noopener noreferrer">⬡ Unifier (this page)</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🪙 Token Systems</div>
+    <a class="ham-link" href="https://github.com/www-infinity/4-hash-token-system" target="_blank" rel="noopener noreferrer">🔐 4-Hash Token System</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Mint-For-Infinity" target="_blank" rel="noopener noreferrer">🌿 Mint For Infinity</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Beyond-Tokens" target="_blank" rel="noopener noreferrer">🌌 Beyond Tokens</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🔬 Science &amp; Research</div>
+    <a class="ham-link" href="https://github.com/www-infinity/Ion" target="_blank" rel="noopener noreferrer">⚡ Ion (Element Discovery)</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Time-Machine" target="_blank" rel="noopener noreferrer">⏱️ Time Machine</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Hydrogen-Digital-TV" target="_blank" rel="noopener noreferrer">📡 Hydrogen Digital TV</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Hydrhost" target="_blank" rel="noopener noreferrer">🌐 HydrHost</a>
+    <a class="ham-link" href="https://github.com/www-infinity/C13b0" target="_blank" rel="noopener noreferrer">🧬 C13b0</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🎮 Games &amp; Media</div>
+    <a class="ham-link" href="https://github.com/www-infinity/Zelda-NES" target="_blank" rel="noopener noreferrer">🗡️ Zelda NES</a>
+    <a class="ham-link" href="https://github.com/www-infinity/NES-Mario-World-Extravaganza-The-Wizard-Platform" target="_blank" rel="noopener noreferrer">🍄 NES Mario / Wizard Platform</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Wizard-NES-Movie-Website-Cartoon-Movie-Theater" target="_blank" rel="noopener noreferrer">🎬 Wizard Movie Theater</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Theater" target="_blank" rel="noopener noreferrer">🎭 Theater (Omni 4)</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Aces" target="_blank" rel="noopener noreferrer">🃏 Aces</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Bob-Segar-s-Musiverse" target="_blank" rel="noopener noreferrer">🎵 Bob Segar Musiverse</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🖥️ Infrastructure</div>
+    <a class="ham-link" href="https://github.com/www-infinity/Zero-Inertia" target="_blank" rel="noopener noreferrer">🔮 Zero Inertia</a>
+    <a class="ham-link" href="https://github.com/www-infinity/No-Inertia" target="_blank" rel="noopener noreferrer">🚀 No Inertia</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Hosting-service" target="_blank" rel="noopener noreferrer">🌐 Hosting Service</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Infinity-Graphics" target="_blank" rel="noopener noreferrer">🎨 Infinity Graphics</a>
+    <a class="ham-link" href="https://github.com/www-infinity/3d-world" target="_blank" rel="noopener noreferrer">🌍 3D World</a>
+    <a class="ham-link" href="https://github.com/www-infinity/R2D2" target="_blank" rel="noopener noreferrer">🤖 R2D2 Signal Processing</a>
+    <a class="ham-link" href="https://github.com/www-infinity/Npx-Claude-flow-" target="_blank" rel="noopener noreferrer">🧠 NPX Claude Flow</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🔬 Research Tools</div>
+    <a class="ham-link" href="https://arxiv.org" target="_blank" rel="noopener noreferrer">📄 arXiv Papers</a>
+    <a class="ham-link" href="https://scholar.google.com" target="_blank" rel="noopener noreferrer">🎓 Google Scholar</a>
+    <a class="ham-link" href="https://archive.org" target="_blank" rel="noopener noreferrer">🗄️ Archive.org</a>
+    <a class="ham-link" href="https://duckduckgo.com/?q=quantum+computing+research" target="_blank" rel="noopener noreferrer">🦆 DuckDuckGo Science</a>
+
+    <div class="ham-divider"></div>
+    <div class="ham-section-label">🌐 www-Infinity</div>
+    <a class="ham-link" href="https://github.com/www-infinity" target="_blank" rel="noopener noreferrer">🚀 GitHub Profile</a>
+
+    <div class="ham-footer">⬡ UNIFIER v2 · ∞ Bitcoin Crusher</div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       LOGIN MODAL
+       ═══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="loginOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+    <div class="modal" id="loginModal">
+      <div class="modal-head">
+        <span class="modal-title" id="loginModalTitle">🔐 Account</span>
+        <button class="modal-close" id="loginClose" aria-label="Close login modal">✕</button>
+      </div>
+      <div class="modal-tabs">
+        <button class="modal-tab active" id="tabLogin" data-tab="login">Sign In</button>
+        <button class="modal-tab" id="tabRegister" data-tab="register">Sign Up</button>
+      </div>
+      <div class="modal-body" id="loginForm">
+        <div class="form-grid">
+          <label class="form-label">Username / Email</label>
+          <input class="form-input" id="loginUser" type="text" autocomplete="username" placeholder="Kris or email" />
+          <label class="form-label">Password</label>
+          <input class="form-input" id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <div class="form-actions">
+          <button class="btn" id="btnLogin">Sign In</button>
+        </div>
+        <div class="auth-msg" id="loginMsg"></div>
+      </div>
+      <div class="modal-body" id="registerForm" style="display:none">
+        <div class="form-grid">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="regUser" type="text" autocomplete="username" placeholder="YourName" />
+          <label class="form-label">Email</label>
+          <input class="form-input" id="regEmail" type="email" autocomplete="email" placeholder="you@example.com" />
+          <label class="form-label">Password</label>
+          <input class="form-input" id="regPass" type="password" autocomplete="new-password" placeholder="min 4 chars" />
+        </div>
+        <div class="form-actions">
+          <button class="btn" id="btnRegister">Create Account</button>
+        </div>
+        <div class="auth-msg" id="registerMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       RESEARCH VIEWER MODAL
+       ═══════════════════════════════════════════ -->
+  <div class="modal-overlay research-overlay" id="researchOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="researchModalTitle">
+    <div class="modal research-modal" id="researchModal">
+      <div class="modal-head">
+        <span class="modal-title" id="researchModalTitle">🔬 Research Token</span>
+        <button class="modal-close" id="researchClose" aria-label="Close research viewer">✕</button>
+      </div>
+      <div class="modal-body research-body" id="researchModalBody">
+        <!-- filled dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TOPBAR
+       ═══════════════════════════════════════════ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="ham-btn" id="hamBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="hamDrawer">
+        <span class="ham-icon">☰</span>
+      </button>
+      <div class="topbar-brand">
+        <span class="topbar-icon">⬡</span>
+        <div>
+          <div class="topbar-kicker">∞ Infinity System</div>
+          <div class="topbar-name">UNIFIER</div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge" id="userBadge" style="display:none">
+        <span class="user-badge-name" id="userBadgeName"></span>
+        <span class="user-badge-role" id="userBadgeRole"></span>
+        <button class="btn btn-xs btn-ghost" id="logoutBtn">Sign Out</button>
+      </div>
+      <button class="btn btn-xs" id="loginBtn">🔐 Sign In</button>
+    </div>
   </header>
 
   <!-- ═══════════════════════════════════════════
        MAIN CONTENT
        ═══════════════════════════════════════════ -->
-  <main id="app">
+  <main class="main">
 
-    <!-- ── Bitcoin Slot Machine ──────────────────── -->
-    <section id="slot-machine" aria-label="Bitcoin Slot Machine">
-      <h2>₿ BITCOIN SLOT</h2>
-      <div id="reels" aria-live="polite">
-        <div class="reel" aria-label="Reel 1">₿</div>
-        <div class="reel" aria-label="Reel 2">⭐</div>
-        <div class="reel" aria-label="Reel 3">🧱</div>
-      </div>
-      <button id="spin-btn" aria-label="Spin the slot machine">
-        ↻ SPIN
-      </button>
-      <p id="slot-result" aria-live="assertive"></p>
-    </section>
-
-    <!-- ── LAYER 3 — Token Network Graph ─────────── -->
-    <section id="token-network" aria-label="Token Network Constellation">
-      <h2>◈ TOKEN NETWORK</h2>
-      <canvas id="network-canvas"></canvas>
-      <div id="node-tooltip" role="tooltip" aria-hidden="true"></div>
-    </section>
-
-    <!-- ── Stats ─────────────────────────────────── -->
-    <section id="stats" aria-label="Universe Statistics">
-      <h2>◉ UNIVERSE STATS</h2>
-      <div class="stat-grid">
-        <div class="stat-item">
-          <div class="stat-value" id="stat-spins">0</div>
-          <div class="stat-label">Spins</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-tokens">0</div>
-          <div class="stat-label">Tokens</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-value">0</div>
-          <div class="stat-label">Total Value</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-nodes">0</div>
-          <div class="stat-label">Network Nodes</div>
-        </div>
+    <!-- ── HERO ─────────────────────────────────── -->
+    <section class="hero">
+      <h1 class="hero-title">⬡ UNIFIER — ∞ Infinity System</h1>
+      <p class="hero-sub">One site to rule them all. Spin the 5-reel slot machine, earn research tokens, build your wallet, and explore every www-infinity repo from one unified interface.</p>
+      <div class="token-flow" aria-hidden="true">
+        <span class="tf-step">🟡 Spin</span>
+        <span class="tf-arrow">→</span>
+        <span class="tf-step">👑 Token</span>
+        <span class="tf-arrow">→</span>
+        <span class="tf-step">🔬 Research</span>
+        <span class="tf-arrow">→</span>
+        <span class="tf-step">🦾 Commit</span>
+        <span class="tf-arrow">→</span>
+        <span class="tf-step">💰 Wallet</span>
+        <span class="tf-arrow">→</span>
+        <span class="tf-step">🌐 Network</span>
       </div>
     </section>
 
-    <!-- ── LAYER 4 — Token Feed ───────────────────── -->
-    <section id="token-feed" aria-label="Token Feed">
-      <h2>◎ TOKEN FEED</h2>
-      <ul id="feed-list" aria-live="polite" aria-label="Recent token events"></ul>
+    <!-- ── SLOT MACHINE ──────────────────────────── -->
+    <section class="machine-wrap">
+      <div class="machine" id="machine">
+        <div class="machine-top">
+          <div class="machine-title-bar">
+            <span class="machine-jackpot-light" id="jLight1"></span>
+            <span class="machine-title-text">💎 BITCOIN CRUSHER — INFINITY UNIFIER 💎</span>
+            <span class="machine-jackpot-light" id="jLight2"></span>
+          </div>
+          <div class="machine-ticker" id="ticker">INFINITY SYSTEM ACTIVE — CRUSHING BITCOIN — ∞ ∞ ∞</div>
+        </div>
+
+        <!-- 5 Reels -->
+        <div class="reels-outer">
+          <div class="reels-window">
+            <div class="reels" id="reels">
+              <div class="reel" id="reel0"><div class="reel-strip" id="strip0"></div></div>
+              <div class="reel-separator"></div>
+              <div class="reel" id="reel1"><div class="reel-strip" id="strip1"></div></div>
+              <div class="reel-separator"></div>
+              <div class="reel" id="reel2"><div class="reel-strip" id="strip2"></div></div>
+              <div class="reel-separator"></div>
+              <div class="reel" id="reel3"><div class="reel-strip" id="strip3"></div></div>
+              <div class="reel-separator"></div>
+              <div class="reel" id="reel4"><div class="reel-strip" id="strip4"></div></div>
+            </div>
+            <div class="reels-shine" aria-hidden="true"></div>
+            <div class="reels-scanline" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="result-bar" id="resultBar">
+          <span class="result-text" id="resultText">Pull the lever to spin!</span>
+        </div>
+
+        <div class="controls">
+          <div class="bet-area">
+            <label class="bet-label">SPINS</label>
+            <div class="spin-counter" id="spinCounter">0</div>
+          </div>
+          <button class="spin-btn" id="spinBtn" aria-label="Spin the slot machine">
+            <span class="spin-btn-icon">🎰</span>
+            <span class="spin-btn-label">SPIN &amp; CRUSH</span>
+          </button>
+          <div class="bet-area">
+            <label class="bet-label">SCORE</label>
+            <div class="spin-counter" id="scoreCounter">0</div>
+          </div>
+        </div>
+
+        <div class="lever-wrap" aria-hidden="true">
+          <div class="lever-track">
+            <div class="lever" id="lever">
+              <div class="lever-ball"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="win-overlay" id="winOverlay" aria-live="assertive" aria-atomic="true"></div>
+    </section>
+
+    <!-- ── LATEST RESEARCH TOKEN ─────────────────── -->
+    <section class="panel" id="researchPanel" style="display:none">
+      <div class="panel-head">
+        <span class="panel-title">🔬 Latest Research Token</span>
+        <div class="panel-head-actions">
+          <span class="panel-hint" id="researchPanelMeta"></span>
+          <button class="btn btn-xs" id="viewResearchBtn">📄 Full Article</button>
+        </div>
+      </div>
+      <div class="panel-body research-preview" id="researchPreview">
+        <!-- filled after each spin -->
+      </div>
+    </section>
+
+    <!-- ── TOKEN WALLET ──────────────────────────── -->
+    <section class="panel" id="walletPanel">
+      <div class="panel-head">
+        <span class="panel-title">💰 Token Wallet</span>
+        <span class="panel-hint" id="walletCount">0 tokens</span>
+      </div>
+      <div class="panel-body" id="walletBody">
+        <p class="wallet-sign-in">🔐 <button class="btn btn-xs" id="walletSignInBtn">Sign in</button> to view your token wallet.</p>
+      </div>
+    </section>
+
+    <!-- ── UNIVERSE STATS ────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">◉ Universe Stats</span>
+      </div>
+      <div class="panel-body">
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-spins">0</div>
+            <div class="stat-label">Spins</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-tokens">0</div>
+            <div class="stat-label">Tokens</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-value">0</div>
+            <div class="stat-label">Score</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-nodes">0</div>
+            <div class="stat-label">Network Nodes</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AI RESEARCH CHAT ──────────────────────── -->
+    <section class="panel" id="chatPanel">
+      <div class="panel-head">
+        <span class="panel-title">🤖 Research AI Chat</span>
+        <span class="panel-hint">DuckDuckGo · Archive.org · Science</span>
+      </div>
+      <div class="panel-body">
+        <div class="chat-log" id="chatLog" aria-live="polite" aria-label="Chat messages">
+          <div class="chat-msg ai">
+            <span class="chat-avatar">🤖</span>
+            <span class="chat-bubble">Hello! I am the Infinity Research AI. Ask me about science, cryptography, materials, quantum physics, or anything else. Spin the slot machine to generate a research token, then ask me about its topic!</span>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" class="form-input chat-input" id="chatInput"
+            placeholder="Ask about quantum computing, blockchain, biology…"
+            aria-label="Chat message input" />
+          <button class="btn chat-send-btn" id="chatSendBtn" aria-label="Send message">↑ Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TOKEN NETWORK CONSTELLATION ──────────── -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">◈ Token Network Constellation</span>
+        <span class="panel-hint">Hover nodes to inspect tokens</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <canvas id="network-canvas"></canvas>
+        <div id="node-tooltip" role="tooltip" aria-hidden="true"></div>
+      </div>
+      <div class="panel-body" style="padding-top:0">
+        <div id="legend">
+          <div class="legend-row"><div class="legend-dot" style="background:#ff6b35"></div><span>🧱 Research</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#f5c518"></div><span>⭐ Discovery</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#22c55e"></div><span>💲 Economic</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#a855f7"></div><span>🧬 Science</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div><span>📜 Archive</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TOKEN FEED ────────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">◎ Live Token Feed</span>
+        <span class="panel-hint">Recent token events</span>
+      </div>
+      <div class="panel-body">
+        <ul id="feed-list" aria-live="polite" aria-label="Recent token events"></ul>
+      </div>
+    </section>
+
+    <!-- ── CONSOLE / LOG ─────────────────────────── -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">🛰️ Infinity Console</span>
+        <button class="btn btn-xs btn-ghost" id="clearLog">Clear</button>
+      </div>
+      <pre class="console-log" id="consoleLog">System ready. Sign in and SPIN.
+</pre>
+    </section>
+
+    <!-- ── HISTORY + EXPORT ──────────────────────── -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">📜 Spin History (this session)</span>
+        <div class="panel-head-actions">
+          <button class="btn btn-xs" id="exportAllBtn" title="Export all spins + research as HTML report">📦 Export All</button>
+          <span class="panel-hint" id="histCount">0 spins</span>
+        </div>
+      </div>
+      <div class="history" id="history"></div>
+    </section>
+
+    <!-- ── DEVICE IDENTITY ───────────────────────── -->
+    <section class="panel" id="identityPanel">
+      <div class="panel-head">
+        <span class="panel-title">🪪 Device Identity</span>
+        <span class="panel-hint">Your 8-block signal address</span>
+      </div>
+      <div class="panel-body">
+        <div class="identity-display" id="identityDisplay" title="Your unique 8-block device identifier">
+          <span class="identity-blocks" id="identityBlocks">········</span>
+        </div>
+        <div class="identity-meta" id="identityMeta"></div>
+        <div class="form-actions">
+          <button class="btn btn-ghost" id="btnCopyId">📋 Copy ID</button>
+          <button class="btn btn-ghost" id="btnRegenId">🔄 Regenerate</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AI SIGNAL ANALYSIS ────────────────────── -->
+    <section class="panel" id="aiPanel">
+      <div class="panel-head">
+        <span class="panel-title">🤖 AI Signal Analysis</span>
+        <span class="panel-hint">Pattern recognition · on-device</span>
+      </div>
+      <div class="panel-body">
+        <div class="ai-status" id="aiStatus">
+          <span class="ai-dot" id="aiDot"></span>
+          <span id="aiStatusText">Awaiting signal data…</span>
+        </div>
+        <pre class="console-log ai-log" id="aiLog">Signal engine ready. Spin to generate pattern data.
+</pre>
+        <div class="ai-prediction" id="aiPrediction"></div>
+      </div>
+    </section>
+
+    <!-- ── ADMIN PANEL (admin only) ─────────────── -->
+    <section class="panel admin-panel" id="adminPanel" style="display:none">
+      <div class="panel-head">
+        <span class="panel-title">⚙️ Admin — Repo Config</span>
+        <span class="panel-hint">Admin only · stored in browser</span>
+      </div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <label class="form-label">Owner</label>
+          <input class="form-input" id="cfgOwner" placeholder="www-infinity" />
+          <label class="form-label">Repo</label>
+          <input class="form-input" id="cfgRepo" placeholder="Unifier" />
+          <label class="form-label">Branch</label>
+          <input class="form-input" id="cfgBranch" placeholder="main" />
+        </div>
+        <div class="form-actions">
+          <button class="btn" id="btnSaveCfg">Save Config</button>
+          <button class="btn btn-ghost" id="btnLoadCfg">Load Saved</button>
+          <button class="btn btn-ghost" id="btnClearCfg">Clear</button>
+        </div>
+        <div class="repo-link-row" id="repoLinkRow" style="display:none">
+          <a class="repo-link" id="repoLink" href="#" target="_blank" rel="noopener noreferrer">🔗 Open repo on GitHub</a>
+        </div>
+        <div id="adminUserList" style="margin-top:16px"></div>
+      </div>
     </section>
 
   </main>
 
-  <!-- ═══════════════════════════════════════════
-       TOKEN TYPE LEGEND
-       ═══════════════════════════════════════════ -->
-  <aside id="legend" aria-label="Token type legend">
-    <h3>Token Types</h3>
-    <div class="legend-row">
-      <div class="legend-dot" style="background:#ff6b35"></div>
-      <span>🧱 Research</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-dot" style="background:#f5c518"></div>
-      <span>⭐ Discovery</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-dot" style="background:#22c55e"></div>
-      <span>💲 Economic</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-dot" style="background:#a855f7"></div>
-      <span>🧬 Science</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-dot" style="background:#3b82f6"></div>
-      <span>📜 Archive</span>
-    </div>
-  </aside>
+  <footer class="footer">
+    <span>⬡ UNIFIER · ∞ Bitcoin Crusher — Infinity System</span>
+    <span>🧱 Every spin is a token. Every token is forever.</span>
+  </footer>
 
   <!-- ═══════════════════════════════════════════
        SCRIPTS
-       Three.js loaded from CDN (MIT licence).
-       All other scripts are local.
+       Three.js via CDN — optional (2-D fallback when unavailable).
        ═══════════════════════════════════════════ -->
-
-  <!-- Three.js r128 via CDN (progressive enhancement — 2D fallback used when unavailable).
-       SRI hash omitted because this is optional; the full 2D canvas fallback in
-       js/token-network.js runs when Three.js is unavailable. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
           crossorigin="anonymous"
-          referrerpolicy="no-referrer">
-  </script>
+          referrerpolicy="no-referrer"></script>
 
-  <!-- Quantum particle field (Layer 1) -->
+  <!-- Runtime cfg stub (GHP token injected by CI) -->
+  <script src="assets/cfg.js"></script>
+
+  <!-- Research article generator -->
+  <script src="assets/research.js"></script>
+
+  <!-- Auth: sign-in / register / token wallet persistence -->
+  <script src="assets/auth.js"></script>
+
+  <!-- Quantum particle field (fixed background canvas) -->
   <script src="js/quantum-field.js" defer></script>
 
-  <!-- Token network 3-D graph (Layer 3) -->
+  <!-- Token network 3D/2D graph -->
   <script src="js/token-network.js" defer></script>
 
-  <!-- Bitcoin slot machine (Layer 4) -->
-  <script src="js/slot-machine.js" defer></script>
-
-  <!-- App bootstrap (loads JSON, seeds feed) -->
+  <!-- Bootstrap: load token_network.json → fires app:ready event -->
   <script src="js/app.js" defer></script>
+
+  <!-- Unified app: slot machine + wallet + research + chat + auth wiring -->
+  <script src="assets/app.js" defer></script>
 
 </body>
 </html>
