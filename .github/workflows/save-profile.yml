@@ -1,0 +1,64 @@
+name: Save Profile
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile_data:
+        description: 'JSON profile record'
+        required: true
+      username:
+        description: 'Username for the profile file (alphanumeric, _, -)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  save:
+    name: Commit profile to repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GHP_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Validate username
+        env:
+          USERNAME: ${{ github.event.inputs.username }}
+        run: |
+          if ! printf '%s' "$USERNAME" | grep -qE '^[a-zA-Z0-9_][a-zA-Z0-9_-]{1,31}$'; then
+            echo "::error::Invalid username: $USERNAME — must start with alphanumeric/underscore, 2-32 characters (a-z, 0-9, _, - allowed)"
+            exit 1
+          fi
+
+      - name: Validate and write profile
+        env:
+          PROFILE_DATA: ${{ github.event.inputs.profile_data }}
+          USERNAME: ${{ github.event.inputs.username }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys
+          data = os.environ.get('PROFILE_DATA', '')
+          if len(data) > 65536:
+              print('::error::Profile data too large (max 64 KB)')
+              sys.exit(1)
+          try:
+              parsed = json.loads(data)
+          except json.JSONDecodeError as e:
+              print(f'::error::Profile data is not valid JSON: {e}')
+              sys.exit(1)
+          username = os.environ['USERNAME']
+          import pathlib
+          pathlib.Path('profiles').mkdir(exist_ok=True)
+          with open(f'profiles/{username}.json', 'w') as f:
+              json.dump(parsed, f, indent=2)
+              f.write('\n')
+          print(f'Profile written: profiles/{username}.json')
+          EOF
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "profiles/${USERNAME}.json"
+          git diff --cached --quiet && echo "Profile unchanged — nothing to commit." || \
+            git commit -m "ci: update profile ${USERNAME} [skip ci]"
+          git push
