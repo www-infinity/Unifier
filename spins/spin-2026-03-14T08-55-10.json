@@ -1,0 +1,24 @@
+{
+  "spinNumber": 3,
+  "timestamp": "2026-03-14T08:55:09.971Z",
+  "symbols": [
+    "👑",
+    "₿",
+    "🌕",
+    "🔥",
+    "🥇"
+  ],
+  "labels": [
+    "CROWN",
+    "BTC",
+    "MOON",
+    "FIRE",
+    "GOLD"
+  ],
+  "result": "🔄 No match. Spin again.",
+  "tier": "lose",
+  "score": 0,
+  "totalScore": 38,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
