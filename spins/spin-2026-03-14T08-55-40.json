@@ -1,0 +1,24 @@
+{
+  "spinNumber": 9,
+  "timestamp": "2026-03-14T08:55:40.489Z",
+  "symbols": [
+    "🧱",
+    "🌕",
+    "🚀",
+    "🍄",
+    "🍄"
+  ],
+  "labels": [
+    "BLOCK",
+    "MOON",
+    "PUMP",
+    "MARIO",
+    "MARIO"
+  ],
+  "result": "✅ WIN — pair found!",
+  "tier": "win-small",
+  "score": 62,
+  "totalScore": 290,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
