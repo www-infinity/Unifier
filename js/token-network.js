@@ -210,6 +210,7 @@
 
     let autoRotate = 0;
     let mouseDown = false, lastMX = 0;
+    let physFrame = 0;
     canvas.addEventListener('mousedown', e => { e.preventDefault(); mouseDown = true; lastMX = e.clientX; });
     window.addEventListener('mouseup',   () => { mouseDown = false; });
     canvas.addEventListener('mousemove', e => {
@@ -228,11 +229,14 @@
 
     (function animate() {
       requestAnimationFrame(animate);
-      autoRotate += 0.003;
+      // Only auto-rotate when the user is not dragging.
+      if (!mouseDown) autoRotate += 0.003;
       camera.position.x = Math.sin(autoRotate) * 18;
       camera.position.z = Math.cos(autoRotate) * 18;
       camera.lookAt(0, 0, 0);
-      applyForces();
+      // Throttle O(n²) physics to every other frame to keep frame rate smooth.
+      physFrame++;
+      if (physFrame % 2 === 0) applyForces();
       updateEdgeGeometries();
       checkHover();
       renderer.render(scene, camera);
@@ -363,6 +367,7 @@
     }
 
     let angle = 0;
+    let physFrame2D = 0;
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
@@ -435,7 +440,9 @@
 
     (function loop() {
       requestAnimationFrame(loop);
-      applyForces();
+      // Throttle O(n²) physics to every other frame to keep frame rate smooth.
+      physFrame2D++;
+      if (physFrame2D % 2 === 0) applyForces();
       checkHover();
       draw();
     }());
