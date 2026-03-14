@@ -1,0 +1,24 @@
+{
+  "spinNumber": 7,
+  "timestamp": "2026-03-14T08:55:29.508Z",
+  "symbols": [
+    "💎",
+    "🍄",
+    "💰",
+    "💰",
+    "👑"
+  ],
+  "labels": [
+    "DIAM",
+    "MARIO",
+    "BAG",
+    "BAG",
+    "CROWN"
+  ],
+  "result": "✅ WIN — pair found!",
+  "tier": "win-small",
+  "score": 52,
+  "totalScore": 168,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
