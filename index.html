@@ -148,6 +148,19 @@
     </div>
   </div>
 
+  <!-- GHP token notice — shown by JS when BITCOIN_CRUSHER_TOKEN is absent -->
+  <div class="ghp-notice" id="ghpNotice" role="alert" aria-live="polite" hidden>
+    <span class="ghp-notice-icon">⚠️</span>
+    <span class="ghp-notice-text">
+      <strong>Spin commits disabled</strong> — the <code>GHP_TOKEN</code> repository secret is not set.
+      Add a GitHub PAT with <code>actions:write</code> scope in
+      <a href="https://github.com/www-infinity/Unifier/settings/secrets/actions" target="_blank" rel="noopener noreferrer">
+        Settings → Secrets → Actions
+      </a> so CI can inject it and enable repo-persisted spins.
+    </span>
+    <button class="ghp-notice-close" id="ghpNoticeClose" aria-label="Dismiss">✕</button>
+  </div>
+
   <!-- ═══════════════════════════════════════════
        TOPBAR
        ═══════════════════════════════════════════ -->
