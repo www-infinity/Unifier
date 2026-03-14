@@ -249,7 +249,8 @@ async function repairRepo(owner, repo, token) {
   }
 
   // Create a repair branch and commit all fixes.
-  const branchName = `autorepair/${Date.now()}`
+  const suffix = Math.random().toString(36).slice(2, 8)
+  const branchName = `autorepair/${Date.now()}-${suffix}`
   const created = await createBranch(owner, repo, branchName, branchInfo.sha, token)
   if (!created) {
     console.log(chalk.red(`     ✗  Failed to create repair branch`))
