@@ -947,6 +947,44 @@ body {
 .chat-input { flex: 1; }
 .chat-send-btn { flex-shrink: 0; white-space: nowrap; }
 
+/* ===== INFINITY CLI PANEL ===== */
+.cli-commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.cli-cmd-btn {
+  background: rgba(0,212,255,.08);
+  border: 1px solid rgba(0,212,255,.25);
+  color: var(--cyan);
+  font-family: var(--mono);
+  letter-spacing: .04em;
+}
+.cli-cmd-btn:hover {
+  background: rgba(0,212,255,.18);
+  border-color: var(--cyan);
+  transform: translateY(-1px);
+}
+.cli-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px 16px;
+}
+.cli-prompt {
+  font-family: var(--mono);
+  color: var(--cyan);
+  font-size: 14px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.cli-input {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
 /* ===== ADMIN PANEL ===== */
 .admin-panel { border-color: rgba(245,197,66,.35); }
 .admin-panel .panel-head { background: rgba(245,197,66,.06); }

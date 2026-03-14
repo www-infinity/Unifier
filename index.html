@@ -388,6 +388,37 @@
 </pre>
     </section>
 
+    <!-- ── INFINITY CLI ──────────────────────────── -->
+    <section class="panel" id="cliPanel">
+      <div class="panel-head">
+        <span class="panel-title">⌨️ Infinity CLI</span>
+        <span class="panel-hint">Browser terminal · <code style="font-size:11px">infinity &lt;cmd&gt;</code></span>
+        <div class="panel-head-actions">
+          <button class="btn btn-xs btn-ghost" id="cliClear">Clear</button>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-bottom:0">
+        <div class="cli-commands">
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="help">help</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="spin">spin</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="token">token</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="wallet">wallet</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="research">research</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="dashboard">dashboard</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="treasury">treasury</button>
+        </div>
+      </div>
+      <pre class="console-log" id="cliOutput">  ∞  INFINITY CLI  ∞
+
+Type a command or click a button above. Try 'help' to list all commands.
+</pre>
+      <div class="cli-input-row">
+        <span class="cli-prompt">∞&gt;</span>
+        <input class="form-input cli-input" id="cliInput" placeholder="spin, token mint, wallet view…" autocomplete="off" spellcheck="false" />
+        <button class="btn" id="cliRun">Run</button>
+      </div>
+    </section>
+
     <!-- ── HISTORY + EXPORT ──────────────────────── -->
     <section class="panel">
       <div class="panel-head">
@@ -449,6 +480,8 @@
           <input class="form-input" id="cfgRepo" placeholder="Unifier" />
           <label class="form-label">Branch</label>
           <input class="form-input" id="cfgBranch" placeholder="main" />
+          <label class="form-label">GHP Token</label>
+          <input class="form-input" id="cfgToken" type="password" placeholder="ghp_… (PAT with actions:write)" autocomplete="off" />
         </div>
         <div class="form-actions">
           <button class="btn" id="btnSaveCfg">Save Config</button>
