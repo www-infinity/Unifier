@@ -5,6 +5,7 @@ module.exports = {
   tokensDir: path.resolve(__dirname, "../tokens"),
   walletsDir: path.resolve(__dirname, "../wallets"),
   outputDir: path.resolve(__dirname, "../output"),
+  profilesDir: path.resolve(__dirname, "../profiles"),
   templatesDir: path.resolve(__dirname, "../templates"),
   treasuryFile: path.resolve(__dirname, "../data/treasury.json"),
 }

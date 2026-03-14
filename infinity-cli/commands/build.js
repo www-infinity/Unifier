@@ -60,9 +60,14 @@ function componentToFilename(component) {
 }
 
 module.exports = function (target) {
+  if (target === "profile") {
+    require("../modules/profile-engine").buildProfile()
+    return
+  }
+
   if (target !== "page") {
     console.log(chalk.red(`Unknown build target: ${target}`))
-    console.log(chalk.yellow("Available targets: page"))
+    console.log(chalk.yellow("Available targets: page, profile"))
     return
   }
 

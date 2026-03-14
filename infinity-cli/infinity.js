@@ -36,7 +36,7 @@ program
 program
   .command("build")
   .description("Build a website component (page)")
-  .argument("[target]", "Build target: page", "page")
+  .argument("[target]", "Build target: page, profile", "page")
   .action((target) => {
     require("./commands/build")(target)
   })
