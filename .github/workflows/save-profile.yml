@@ -1,64 +1,64 @@
-name: Save Profile
+name: Save User Profile
 
 on:
   workflow_dispatch:
     inputs:
       profile_data:
-        description: 'JSON profile record'
+        description: 'JSON profile data (encrypted)'
         required: true
+        type: string
       username:
-        description: 'Username for the profile file (alphanumeric, _, -)'
+        description: 'Username (alphanumeric, underscore, hyphen only, max 32 chars)'
         required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
   save:
-    name: Commit profile to repository
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GHP || secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Validate username
         env:
-          USERNAME: ${{ github.event.inputs.username }}
+          USERNAME: ${{ inputs.username }}
         run: |
-          if ! printf '%s' "$USERNAME" | grep -qE '^[a-zA-Z0-9_][a-zA-Z0-9_-]{1,31}$'; then
-            echo "::error::Invalid username: $USERNAME — must start with alphanumeric/underscore, 2-32 characters (a-z, 0-9, _, - allowed)"
+          if ! echo "$USERNAME" | grep -qE '^[a-zA-Z0-9_-]{2,32}$'; then
+            echo "❌ Invalid username: $USERNAME"
             exit 1
           fi
 
-      - name: Validate and write profile
+      - name: Write profile file and commit
         env:
-          PROFILE_DATA: ${{ github.event.inputs.profile_data }}
-          USERNAME: ${{ github.event.inputs.username }}
+          PROFILE_DATA: ${{ inputs.profile_data }}
+          USERNAME: ${{ inputs.username }}
         run: |
-          python3 - <<'EOF'
-          import json, os, sys
-          data = os.environ.get('PROFILE_DATA', '')
-          if len(data) > 65536:
-              print('::error::Profile data too large (max 64 KB)')
-              sys.exit(1)
-          try:
-              parsed = json.loads(data)
-          except json.JSONDecodeError as e:
-              print(f'::error::Profile data is not valid JSON: {e}')
-              sys.exit(1)
-          username = os.environ['USERNAME']
-          import pathlib
-          pathlib.Path('profiles').mkdir(exist_ok=True)
-          with open(f'profiles/{username}.json', 'w') as f:
-              json.dump(parsed, f, indent=2)
-              f.write('\n')
-          print(f'Profile written: profiles/{username}.json')
-          EOF
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "profiles/${USERNAME}.json"
-          git diff --cached --quiet && echo "Profile unchanged — nothing to commit." || \
-            git commit -m "ci: update profile ${USERNAME} [skip ci]"
-          git push
+          mkdir -p profiles
+          node -e "
+            const path = require('path');
+            const fs = require('fs');
+            const username = process.env.USERNAME;
+            const filename = 'profiles/' + username + '.json';
+            const resolved = path.resolve(filename);
+            const profilesDir = path.resolve('profiles');
+            if (!resolved.startsWith(profilesDir + path.sep)) {
+              console.error('Path traversal detected: ' + filename);
+              process.exit(1);
+            }
+            // Validate that profile_data is valid JSON before writing
+            try { JSON.parse(process.env.PROFILE_DATA); } catch(e) {
+              console.error('Invalid JSON in profile_data');
+              process.exit(1);
+            }
+            fs.writeFileSync(resolved, process.env.PROFILE_DATA + '\n');
+          "
+          git config user.name 'www-Infinity'
+          git config user.email 'tigerbalm7623@gmail.com'
+          git add "profiles/$USERNAME.json"
+          git commit -m "👤 Profile update: $USERNAME" || echo "No changes to commit"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

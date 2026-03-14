@@ -1,47 +1,66 @@
-name: Save Spin
+name: Save Spin Record
 
 on:
   workflow_dispatch:
     inputs:
       spin_data:
-        description: 'JSON spin record'
+        description: 'JSON spin data'
         required: true
+        type: string
       filename:
-        description: 'Target file path (e.g. spins/spin-2026-03-13T11-43-20.json)'
+        description: 'Target filename (e.g. spins/spin-2026-03-13T01-52-40.json)'
         required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
   save:
-    name: Commit spin record to repository
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GHP || secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Validate filename
         env:
-          FILENAME: ${{ github.event.inputs.filename }}
+          FILENAME: ${{ inputs.filename }}
         run: |
-          if ! printf '%s' "$FILENAME" | grep -qE '^spins/spin-[0-9T-]+\.json$'; then
-            echo "::error::Invalid spin filename: $FILENAME — must match spins/spin-<timestamp>.json"
+          if ! echo "$FILENAME" | grep -qE '^spins/spin-[0-9T-]+\.json$'; then
+            echo "❌ Invalid filename: $FILENAME"
             exit 1
           fi
 
-      - name: Write and commit spin record
+      - name: Write spin file and commit
         env:
-          SPIN_DATA: ${{ github.event.inputs.spin_data }}
-          FILENAME: ${{ github.event.inputs.filename }}
+          SPIN_DATA: ${{ inputs.spin_data }}
+          FILENAME: ${{ inputs.filename }}
         run: |
-          mkdir -p "$(dirname "$FILENAME")"
-          printf '%s\n' "$SPIN_DATA" > "$FILENAME"
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p spins
+          node -e "
+            const path = require('path');
+            const fs = require('fs');
+            const filename = process.env.FILENAME;
+            const resolved = path.resolve(filename);
+            const spinsDir = path.resolve('spins');
+            if (!resolved.startsWith(spinsDir + path.sep)) {
+              console.error('Path traversal detected: ' + filename);
+              process.exit(1);
+            }
+            fs.writeFileSync(resolved, process.env.SPIN_DATA + '\n');
+            // Extract commit message fields from spin data
+            try {
+              const d = JSON.parse(process.env.SPIN_DATA);
+              const msg = '🎰 Spin #' + d.spinNumber + ': ' + d.result + ' [' + (d.symbols || []).join(' ') + ']';
+              fs.writeFileSync('.git/COMMIT_MSG', msg);
+            } catch (e) {
+              fs.writeFileSync('.git/COMMIT_MSG', '🎰 Spin: ' + filename);
+            }
+          "
+          git config user.name 'www-Infinity'
+          git config user.email 'tigerbalm7623@gmail.com'
           git add "$FILENAME"
-          git diff --cached --quiet && echo "Spin already recorded — nothing to commit." || \
-            git commit -m "ci: save spin $FILENAME [skip ci]"
-          git push
+          git commit -F .git/COMMIT_MSG
+          git push origin "HEAD:${GITHUB_REF_NAME}"
