@@ -3,3 +3,5 @@
 // GHP_TOKEN repository secret: Settings → Secrets & variables → Actions → New secret.
 // When running locally this file is a safe placeholder with no token.
 window.BITCOIN_CRUSHER_TOKEN = window.BITCOIN_CRUSHER_TOKEN || "";
+// GitHub Pages site URL — injected by CI; used by the CLI and web app.
+window.SITE_URL = "https://www-infinity.github.io/Unifier/";
