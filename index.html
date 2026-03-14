@@ -152,11 +152,11 @@
   <div class="ghp-notice" id="ghpNotice" role="alert" aria-live="polite" hidden>
     <span class="ghp-notice-icon">⚠️</span>
     <span class="ghp-notice-text">
-      <strong>Spin commits disabled</strong> — the <code>GHP_TOKEN</code> repository secret is not set.
+      <strong>Spin commits disabled</strong> — the <code>GHP</code> repository secret is not set.
       Add a GitHub PAT with <code>actions:write</code> scope in
       <a href="https://github.com/www-infinity/Unifier/settings/secrets/actions" target="_blank" rel="noopener noreferrer">
         Settings → Secrets → Actions
-      </a> so CI can inject it and enable repo-persisted spins.
+      </a> (secret name: <code>GHP</code>) so CI can inject it and enable repo-persisted spins.
     </span>
     <button class="ghp-notice-close" id="ghpNoticeClose" aria-label="Dismiss">✕</button>
   </div>
@@ -406,6 +406,8 @@
           <button class="btn btn-xs cli-cmd-btn" data-cmd="research">research</button>
           <button class="btn btn-xs cli-cmd-btn" data-cmd="dashboard">dashboard</button>
           <button class="btn btn-xs cli-cmd-btn" data-cmd="treasury">treasury</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="autorepair">autorepair</button>
+          <button class="btn btn-xs cli-cmd-btn" data-cmd="ask fix my repos">ask</button>
         </div>
       </div>
       <pre class="console-log" id="cliOutput">  ∞  INFINITY CLI  ∞
@@ -492,6 +494,59 @@ Type a command or click a button above. Try 'help' to list all commands.
           <a class="repo-link" id="repoLink" href="#" target="_blank" rel="noopener noreferrer">🔗 Open repo on GitHub</a>
         </div>
         <div id="adminUserList" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <!-- ── AI UNIVERSE — ALWAYS GROWING ─────────── -->
+    <section class="panel" id="aiUniversePanel">
+      <div class="panel-head">
+        <span class="panel-title">🌌 AI Universe — Always Growing</span>
+        <span class="panel-hint">Live research stream · cinematic mode</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <div class="ai-universe">
+          <!-- Animated background -->
+          <div class="ai-universe-bg" aria-hidden="true">
+            <div class="ai-stars"></div>
+            <div class="ai-stars-2"></div>
+            <div class="ai-nebula ai-nebula-1"></div>
+            <div class="ai-nebula ai-nebula-2"></div>
+            <div class="ai-nebula ai-nebula-3"></div>
+          </div>
+          <!-- Content -->
+          <div class="ai-universe-content">
+            <div class="ai-universe-header">
+              <div class="ai-universe-pulse"></div>
+              <span class="ai-universe-title">∞ INFINITY RESEARCH STREAM</span>
+              <span class="ai-universe-badge">LIVE</span>
+            </div>
+            <div class="ai-feed" id="aiUniverseFeed" aria-live="polite" aria-label="Live AI research feed">
+              <!-- Articles injected by JS -->
+            </div>
+            <!-- Scenery ticker -->
+            <div class="ai-scenery-bar" aria-hidden="true">
+              <div class="ai-scenery-track" id="aiSceneryTrack">
+                <span class="ai-scenery-item">🌌 Quantum Entanglement Observed at Room Temperature</span>
+                <span class="ai-scenery-item">⚛️ New Particle Detected at CERN</span>
+                <span class="ai-scenery-item">₿ Bitcoin Lightning Network Reaches 1B Channels</span>
+                <span class="ai-scenery-item">🧬 CRISPR Gene Editing Milestone</span>
+                <span class="ai-scenery-item">🚀 Mars Colony Water Mining Begins</span>
+                <span class="ai-scenery-item">🔭 Webb Telescope Finds Ancient Galaxies</span>
+                <span class="ai-scenery-item">🌊 Ocean-Depth Quantum Tunnelling Confirmed</span>
+                <span class="ai-scenery-item">∞ Infinity Token Network Expands</span>
+                <!-- Duplicate for seamless loop -->
+                <span class="ai-scenery-item">🌌 Quantum Entanglement Observed at Room Temperature</span>
+                <span class="ai-scenery-item">⚛️ New Particle Detected at CERN</span>
+                <span class="ai-scenery-item">₿ Bitcoin Lightning Network Reaches 1B Channels</span>
+                <span class="ai-scenery-item">🧬 CRISPR Gene Editing Milestone</span>
+                <span class="ai-scenery-item">🚀 Mars Colony Water Mining Begins</span>
+                <span class="ai-scenery-item">🔭 Webb Telescope Finds Ancient Galaxies</span>
+                <span class="ai-scenery-item">🌊 Ocean-Depth Quantum Tunnelling Confirmed</span>
+                <span class="ai-scenery-item">∞ Infinity Token Network Expands</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

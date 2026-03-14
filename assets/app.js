@@ -1144,11 +1144,14 @@
       "  visualizer        Visualizer builder — action: build",
       "  treasury          Token treasury — action: view",
       "  dashboard         Show the Infinity system dashboard",
+      "  autorepair        Scan GitHub repos for issues (requires GHP token)",
+      "  ask <text>        Natural-language command — type what you want to do",
       "  help              Show this help",
       "",
       "  Tip: install the CLI locally with",
       "       cd infinity-cli && npm install",
       "       then run  node infinity.js <command>",
+      "  Or just type naturally, e.g.: 'fix my repos' · 'spin the machine' · 'show my wallet'",
     ].join("\n");
 
     function genId() {
@@ -1249,6 +1252,55 @@
           `  Active Wallets:        1`,
         ].join("\n");
       },
+
+      autorepair: () => {
+        const token = (window.BITCOIN_CRUSHER_TOKEN || "").trim();
+        if (!token) {
+          return [
+            `🔧  AutoRepair`,
+            ``,
+            `  ✗  No GHP token found.`,
+            `     Set the GHP repository secret (PAT with repo+workflow scopes)`,
+            `     or paste your token in the Admin → Repo Config panel.`,
+            ``,
+            `  In the terminal CLI run:`,
+            `     GHP=<your-token> node infinity.js autorepair`,
+          ].join("\n");
+        }
+        return [
+          `🔧  AutoRepair — scanning www-infinity repositories…`,
+          ``,
+          `  ⟳  Unifier            checking workflows…`,
+          `  ⟳  Bitcoin-Crusher    checking workflows…`,
+          ``,
+          `  ✓  Run 'node infinity-cli/infinity.js autorepair' locally`,
+          `     (or push to trigger the workflow) to apply fixes and open PRs.`,
+        ].join("\n");
+      },
+
+      ask: (...words) => {
+        // Simple in-browser NLP — keyword dispatch.
+        const text = words.join(" ").toLowerCase();
+        const map = [
+          { re: /spin|slot|play|roll|lever/,            cmd: "spin" },
+          { re: /mint.?token|create.?token|new.?token/,  cmd: "token mint" },
+          { re: /list.?token|show.?token|my.?token/,     cmd: "token list" },
+          { re: /wallet|balance/,                        cmd: "wallet view" },
+          { re: /research|article/,                      cmd: "research generate" },
+          { re: /dashboard|stats|status|overview/,       cmd: "dashboard" },
+          { re: /treasury/,                              cmd: "treasury view" },
+          { re: /repair|fix|diagnos/,                    cmd: "autorepair" },
+          { re: /help|commands/,                         cmd: "help" },
+        ];
+        const match = map.find((m) => m.re.test(text));
+        if (!match) {
+          return `◈  NLP — could not parse: "${words.join(" ")}"\n\nTry: spin · fix my repos · show wallet · help`;
+        }
+        const result = `◈  NLP — matched: "${match.cmd}"\n\n`;
+        const parts  = match.cmd.split(" ");
+        const fn     = COMMANDS[parts[0]];
+        return result + (fn ? fn(parts[1]) : `Unknown command: ${parts[0]}`);
+      },
     };
 
     function runCommand(cmdStr) {
@@ -1259,7 +1311,9 @@
 
       const output = COMMANDS[cmd]
         ? COMMANDS[cmd](...args)
-        : `Command not found: ${cmd}\nType 'help' for available commands.`;
+        : COMMANDS["ask"]
+          ? COMMANDS["ask"](cmd, ...args)  // NLP catch-all for unknown words
+          : `Command not found: ${cmd}\nType 'help' for available commands.`;
 
       cliOutput.textContent += `\n∞> ${cmdStr}\n${output}\n`;
       cliOutput.scrollTop = cliOutput.scrollHeight;
@@ -1325,6 +1379,100 @@
       }
       log("⚠️  No GHP secret — spins are local only. (Admin: set GHP token in ⚙️ Config panel)", "warn");
     }
+
+    // Bootstrap the AI Universe cinematic feed.
+    initAiUniverse();
+  }
+
+  /* ------------------------------------------------------------------
+     AI UNIVERSE — ALWAYS-GROWING CINEMATIC RESEARCH FEED
+  ------------------------------------------------------------------ */
+  const AI_TOPICS = [
+    { domain: "Quantum Physics",    icon: "⚛️",  colour: "#a5b4fc" },
+    { domain: "Blockchain",         icon: "₿",   colour: "#fbbf24" },
+    { domain: "Cosmology",          icon: "🔭",  colour: "#67e8f9" },
+    { domain: "Cryptography",       icon: "🔐",  colour: "#86efac" },
+    { domain: "Neuroscience",       icon: "🧠",  colour: "#f9a8d4" },
+    { domain: "Materials Science",  icon: "🧬",  colour: "#c4b5fd" },
+    { domain: "Astrophysics",       icon: "🌌",  colour: "#7dd3fc" },
+    { domain: "Information Theory", icon: "∞",   colour: "#00ffcc" },
+    { domain: "Radio Astronomy",    icon: "📡",  colour: "#fde68a" },
+    { domain: "Token Economics",    icon: "🪙",  colour: "#d9f99d" },
+  ];
+
+  const AI_EQUATIONS = [
+    "E = mc²",
+    "ψ(x,t) = Ae^{i(kx−ωt)}",
+    "S = k_B ln Ω",
+    "H = −Σ p(x) log₂ p(x)",
+    "∇²φ = ρ/ε₀",
+    "i = Σ aₙ e^{inωt}",
+    "F = ma",
+    "R_{μν} − ½g_{μν}R = 8πGT_{μν}",
+    "ΔxΔp ≥ ℏ/2",
+    "c = λf",
+  ];
+
+  const AI_SUMMARIES = [
+    "Recent observations suggest coherent quantum states persist far longer than classical decoherence models predict.",
+    "Distributed ledger topologies exhibit phase-transition behaviour consistent with scale-free network theory.",
+    "Spectral analysis of the 21 cm hydrogen line reveals unexplained periodicity in the outer galactic halo.",
+    "Zero-knowledge proof systems enable trustless verification without revealing private witness data.",
+    "Synaptic plasticity follows a Hebbian learning rule modified by spike-timing-dependent potentials.",
+    "Superlattice metamaterials achieve negative refractive indices across the visible light spectrum.",
+    "Gravitational wave echoes from binary neutron star mergers constrain dense-matter equation of state.",
+    "Shannon capacity of a noisy channel approaches theoretical maximum using turbo-coded modulation.",
+    "Pulsed radio emissions from magnetars suggest coherent bunching of relativistic plasma bunches.",
+    "Inflation-adjusted token velocity correlates with on-chain fee pressure during high-utilisation epochs.",
+  ];
+
+  let _aiUniverseTimer = null;
+
+  function makeAiArticle() {
+    const topic = AI_TOPICS[Math.floor(Math.random() * AI_TOPICS.length)];
+    const eq    = AI_EQUATIONS[Math.floor(Math.random() * AI_EQUATIONS.length)];
+    const summ  = AI_SUMMARIES[Math.floor(Math.random() * AI_SUMMARIES.length)];
+    const src   = `arXiv:${2020 + Math.floor(Math.random() * 6)}.${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}`;
+    const ts    = new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC";
+
+    const el = document.createElement("div");
+    el.className = "ai-article";
+    el.innerHTML = `
+      <div class="ai-article-meta">
+        <span>${topic.icon} ${topic.domain}</span>
+        <span>${src}</span>
+        <span>${ts}</span>
+      </div>
+      <div class="ai-article-title" style="color:${topic.colour}">${topic.icon} ${topic.domain}: ${summ.split(" ").slice(0, 7).join(" ")}…</div>
+      <div class="ai-article-summary">${summ}</div>
+      <div class="ai-article-eq">${eq}</div>
+    `;
+    return el;
+  }
+
+  function initAiUniverse() {
+    const feed = document.getElementById("aiUniverseFeed");
+    if (!feed) return;
+
+    // Seed with 3 initial articles.
+    for (let i = 0; i < 3; i++) {
+      const article = makeAiArticle();
+      // Stagger entry animations.
+      article.style.animationDelay = `${i * 0.2}s`;
+      feed.appendChild(article);
+    }
+
+    // Append a new article every 8 seconds.
+    _aiUniverseTimer = setInterval(() => {
+      const article = makeAiArticle();
+      feed.appendChild(article);
+      // Auto-scroll to show the newest article.
+      feed.scrollTop = feed.scrollHeight;
+      // Keep feed from growing unboundedly — remove oldest if > 30.
+      while (feed.children.length > 30) {
+        feed.removeChild(feed.firstChild);
+      }
+    }, 8000);
   }
 
   document.addEventListener("DOMContentLoaded", init);

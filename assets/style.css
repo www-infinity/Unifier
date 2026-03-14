@@ -1339,3 +1339,223 @@ body {
   }
   #quantum-field { display: none; }
 }
+
+/* ===== AI UNIVERSE — CINEMATIC SECTION ===== */
+.ai-universe {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+  min-height: 520px;
+  padding: 0;
+}
+
+/* Animated starfield layers */
+.ai-universe-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ai-stars {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at  10%  20%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  30%  60%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  55%  15%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  75%  45%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  90%  75%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at  18%  80%, #aef 0%, transparent 100%),
+    radial-gradient(2px 2px at  44%  35%, #fae 0%, transparent 100%),
+    radial-gradient(2px 2px at  68%  88%, #afe 0%, transparent 100%),
+    radial-gradient(1px 1px at   5%  50%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  85%  10%, #fff 0%, transparent 100%);
+  animation: aiStarsDrift 40s linear infinite;
+  opacity: .7;
+}
+.ai-stars-2 {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at  22%  42%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at  60%  72%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at  38%   8%, #ffd 0%, transparent 100%),
+    radial-gradient(1px 1px at  80%  30%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at  92%  58%, #dff 0%, transparent 100%),
+    radial-gradient(1px 1px at  14%  92%, #fff 0%, transparent 100%);
+  animation: aiStarsDrift 60s linear infinite reverse;
+  opacity: .5;
+}
+@keyframes aiStarsDrift {
+  from { transform: translateX(0) translateY(0); }
+  to   { transform: translateX(-80px) translateY(-40px); }
+}
+
+/* Nebula colour blobs */
+.ai-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .18;
+  animation: aiNebulaPulse 12s ease-in-out infinite alternate;
+}
+.ai-nebula-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #7c3aed, #2563eb);
+  top: -150px; left: -100px;
+  animation-delay: 0s;
+}
+.ai-nebula-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #059669, #0891b2);
+  bottom: -120px; right: -80px;
+  animation-delay: -6s;
+}
+.ai-nebula-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #dc2626, #d97706);
+  top: 50%; left: 40%;
+  transform: translate(-50%, -50%);
+  animation-delay: -3s;
+  opacity: .12;
+}
+@keyframes aiNebulaPulse {
+  from { transform: scale(1); opacity: .18; }
+  to   { transform: scale(1.15); opacity: .28; }
+}
+.ai-nebula-1 { animation-name: aiNebulaPulse1; }
+.ai-nebula-2 { animation-name: aiNebulaPulse2; }
+.ai-nebula-3 { animation-name: aiNebulaPulse3; }
+@keyframes aiNebulaPulse1 {
+  from { transform: scale(1) rotate(0deg); opacity: .18; }
+  to   { transform: scale(1.2) rotate(15deg); opacity: .28; }
+}
+@keyframes aiNebulaPulse2 {
+  from { transform: scale(1) rotate(0deg); opacity: .15; }
+  to   { transform: scale(1.1) rotate(-10deg); opacity: .25; }
+}
+@keyframes aiNebulaPulse3 {
+  from { transform: translate(-50%,-50%) scale(1); opacity: .10; }
+  to   { transform: translate(-50%,-50%) scale(1.3); opacity: .18; }
+}
+
+/* Content layer */
+.ai-universe-content {
+  position: relative;
+  z-index: 1;
+  padding: 24px 28px;
+}
+.ai-universe-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0,255,204,.2);
+  padding-bottom: 14px;
+}
+.ai-universe-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  color: #00ffcc;
+  letter-spacing: .08em;
+  text-shadow: 0 0 12px rgba(0,255,204,.5);
+}
+.ai-universe-badge {
+  background: rgba(0,255,204,.15);
+  border: 1px solid rgba(0,255,204,.4);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 11px;
+  color: #00ffcc;
+  letter-spacing: .05em;
+}
+.ai-universe-pulse {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #00ffcc;
+  box-shadow: 0 0 8px #00ffcc;
+  animation: aiPulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes aiPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.6); }
+}
+
+/* Scrolling article feed */
+.ai-feed {
+  max-height: 360px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,204,.3) transparent;
+}
+.ai-feed::-webkit-scrollbar { width: 4px; }
+.ai-feed::-webkit-scrollbar-thumb { background: rgba(0,255,204,.3); border-radius: 2px; }
+
+.ai-article {
+  background: rgba(0,255,204,.04);
+  border: 1px solid rgba(0,255,204,.12);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  animation: aiArticleIn .6s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+@keyframes aiArticleIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.ai-article-meta {
+  font-size: 10px;
+  color: rgba(0,255,204,.5);
+  letter-spacing: .06em;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ai-article-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.ai-article-summary {
+  font-size: 12px;
+  color: rgba(226,232,240,.6);
+  line-height: 1.55;
+}
+.ai-article-eq {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: #a5b4fc;
+  margin-top: 8px;
+  opacity: .8;
+}
+
+/* Scenery ticker at the bottom */
+.ai-scenery-bar {
+  margin-top: 16px;
+  height: 28px;
+  overflow: hidden;
+  border-top: 1px solid rgba(0,255,204,.1);
+  display: flex;
+  align-items: center;
+}
+.ai-scenery-track {
+  display: flex;
+  gap: 40px;
+  animation: aiSceneryScroll 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes aiSceneryScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ai-scenery-item {
+  font-size: 12px;
+  color: rgba(0,255,204,.45);
+  letter-spacing: .04em;
+}

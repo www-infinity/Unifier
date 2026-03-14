@@ -80,4 +80,25 @@ program
     require("./commands/dashboard")()
   })
 
+program
+  .command("ask")
+  .description("Ask in plain English — NLP maps your text to a command")
+  .argument("[text...]", "What you want to do, in natural language")
+  .action((text) => {
+    require("./commands/ask")(text.join(" "))
+  })
+
+program
+  .command("autorepair")
+  .description("Scan GitHub repos for issues and open fix PRs")
+  .option("--repo <repos>", "Comma-separated list of repo slugs (e.g. Unifier,Bitcoin-Crusher)")
+  .action((options) => {
+    require("./commands/autorepair")(options)
+  })
+
+// Catch-all: treat unrecognised input as natural language.
+program.on("command:*", (operands) => {
+  require("./commands/ask")(operands.join(" "))
+})
+
 program.parse()
