@@ -1,0 +1,24 @@
+{
+  "spinNumber": 11,
+  "timestamp": "2026-03-14T08:55:51.142Z",
+  "symbols": [
+    "🔥",
+    "⭐",
+    "🌕",
+    "🔥",
+    "🧱"
+  ],
+  "labels": [
+    "FIRE",
+    "STAR",
+    "MOON",
+    "FIRE",
+    "BLOCK"
+  ],
+  "result": "✅ WIN — pair found!",
+  "tier": "win-small",
+  "score": 36,
+  "totalScore": 461,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
