@@ -1,0 +1,24 @@
+{
+  "spinNumber": 1,
+  "timestamp": "2026-03-14T08:41:29.985Z",
+  "symbols": [
+    "∞",
+    "₿",
+    "∞",
+    "⭐",
+    "🧱"
+  ],
+  "labels": [
+    "INF",
+    "BTC",
+    "INF",
+    "STAR",
+    "BLOCK"
+  ],
+  "result": "✅ WIN — pair found!",
+  "tier": "win-small",
+  "score": 50,
+  "totalScore": 50,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
