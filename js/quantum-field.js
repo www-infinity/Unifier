@@ -6,12 +6,22 @@
 (function () {
   'use strict';
 
+  // Respect the OS/browser reduced-motion preference — skip the canvas entirely.
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const canvas = document.getElementById('qf-canvas');
   const ctx    = canvas.getContext('2d');
+
+  // Max base particles kept in the field at any time.
+  const MAX_PARTICLES = 80;
+  // Max burst particles that can be added per spin (beyond base field).
+  const MAX_BURST_PARTICLES = MAX_PARTICLES * 3;
+  const CONN_SKIP = 2;
 
   let W, H;
   let particles = [];
   let animId;
+  let frameCount = 0;
 
   // ── Resize ────────────────────────────────────
   function resize() {
@@ -44,25 +54,28 @@
     return COLORS[Math.floor(Math.random() * COLORS.length)];
   }
 
-  // Seed the field
+  // Seed the field — use fewer base particles for better frame rate.
   function seedField(count) {
     particles = [];
     for (let i = 0; i < count; i++) {
       particles.push(makeParticle());
     }
   }
-  seedField(120);
+  seedField(reducedMotion ? 0 : 60);
 
-  // ── Draw connections ─────────────────────────
+  // ── Draw connections (throttled, smaller radius) ──────────────────
   function drawConnections() {
-    const max = 140;
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
+    const max = 100;
+    const maxSq = max * max;
+    // Only check base particles (skip recently-burst extras) for connections.
+    const limit = Math.min(particles.length, MAX_PARTICLES);
+    for (let i = 0; i < limit; i++) {
+      for (let j = i + 1; j < limit; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < max) {
-          const opacity = (1 - dist / max) * 0.12;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < maxSq) {
+          const opacity = (1 - Math.sqrt(distSq) / max) * 0.12;
           ctx.beginPath();
           ctx.strokeStyle = `rgba(0, 229, 255, ${opacity})`;
           ctx.lineWidth = 0.5;
@@ -107,10 +120,15 @@
 
   // ── Render loop ───────────────────────────────
   function render() {
+    frameCount++;
     ctx.clearRect(0, 0, W, H);
 
     updateParticles();
-    drawConnections();
+
+    // Draw connections only on every CONN_SKIP-th frame.
+    if (frameCount % CONN_SKIP === 0) {
+      drawConnections();
+    }
 
     particles.forEach(p => {
       ctx.beginPath();
@@ -121,19 +139,27 @@
 
     animId = requestAnimationFrame(render);
   }
-  render();
+
+  if (!reducedMotion) {
+    render();
+  }
 
   // ── Public API ────────────────────────────────
   /**
    * spinBurst(cx, cy, count, termList)
    * Emits burst particles from centre coords.
    * Called by slot-machine on each spin.
+   * Total particle count is capped to avoid frame-rate drops.
    */
   window.QuantumField = {
     spinBurst(cx, cy, count, termList) {
-      count = count || 300;
+      if (reducedMotion) return;
+      count = count || 60;
       termList = termList || [];
-      for (let i = 0; i < count; i++) {
+      // Cap total particles to keep rendering smooth (burst + base ≤ MAX_BURST_PARTICLES).
+      const headroom = Math.max(0, MAX_BURST_PARTICLES - particles.length);
+      const actual = Math.min(count, headroom);
+      for (let i = 0; i < actual; i++) {
         const angle  = Math.random() * Math.PI * 2;
         const speed  = Math.random() * 5 + 1;
         const term   = termList[Math.floor(Math.random() * termList.length)] || null;

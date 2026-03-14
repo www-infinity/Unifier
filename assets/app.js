@@ -496,7 +496,7 @@
       window.QuantumField.spinBurst(
         rect.left + rect.width / 2,
         rect.top  + rect.height / 2,
-        res.tier === "jackpot" ? 600 : 200,
+        res.tier === "jackpot" ? 120 : 60,
         []
       );
     }
@@ -1313,6 +1313,16 @@
     if (getAuthToken() && cfg.owner && cfg.repo) {
       log(`✅ Repo: ${cfg.owner}/${cfg.repo} — GHP active, spins will be committed.`, "ok");
     } else {
+      log("⚠️  No GHP secret — spins are local only.", "warn");
+      // Show the dismissible banner
+      const notice = $("ghpNotice");
+      if (notice) {
+        notice.hidden = false;
+        const closeBtn = $("ghpNoticeClose");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => { notice.hidden = true; }, { once: true });
+        }
+      }
       log("⚠️  No GHP secret — spins are local only. (Admin: set GHP token in ⚙️ Config panel)", "warn");
     }
   }
