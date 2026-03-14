@@ -1,0 +1,24 @@
+{
+  "spinNumber": 5,
+  "timestamp": "2026-03-14T08:55:19.424Z",
+  "symbols": [
+    "⭐",
+    "💎",
+    "⭐",
+    "₿",
+    "🍄"
+  ],
+  "labels": [
+    "STAR",
+    "DIAM",
+    "STAR",
+    "BTC",
+    "MARIO"
+  ],
+  "result": "✅ WIN — pair found!",
+  "tier": "win-small",
+  "score": 36,
+  "totalScore": 116,
+  "deviceId": "f394bdbe-e0fdec08-92c7505e-e1456004-83abfcc1-d8216c1d-ae688030-6fd8e2a6",
+  "username": "guest"
+}
