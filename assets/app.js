@@ -141,7 +141,10 @@
   /* ------------------------------------------------------------------
      AUTH TOKEN
   ------------------------------------------------------------------ */
-  function getAuthToken() { return (window.BITCOIN_CRUSHER_TOKEN || "").trim(); }
+  const GHP_TOKEN_KEY = "bc_ghp_token_v1";
+  function getAuthToken() {
+    return (window.BITCOIN_CRUSHER_TOKEN || localStorage.getItem(GHP_TOKEN_KEY) || "").trim();
+  }
 
   /* ------------------------------------------------------------------
      GITHUB API — TRIGGER SAVE-SPIN WORKFLOW
@@ -542,6 +545,13 @@
       window.AUTH.addTokenToUser(user.username, tokenSummary);
       window.AUTH.updateUserStats(user.username, spinCount, totalScore);
       renderWallet();
+      // Commit public profile to repo when GHP token is available
+      const ghpToken = getAuthToken();
+      if (ghpToken && cfg.owner && cfg.repo) {
+        window.AUTH.saveProfileToRepo(user.username, ghpToken, cfg.owner, cfg.repo, cfg.branch)
+          .then((ok) => { if (ok) log(`📤 Profile updated → profiles/${user.username}.json`, "ok"); })
+          .catch(() => {});
+      }
     }
 
     // Add to token network
@@ -711,10 +721,11 @@
   }
 
   function pushCfgToInputs() {
-    const o = $("cfgOwner"), r = $("cfgRepo"), b = $("cfgBranch");
+    const o = $("cfgOwner"), r = $("cfgRepo"), b = $("cfgBranch"), t = $("cfgToken");
     if (o) o.value = cfg.owner || "";
     if (r) r.value = cfg.repo  || "";
     if (b) b.value = cfg.branch || "main";
+    if (t) t.placeholder = localStorage.getItem(GHP_TOKEN_KEY) ? "●●●●●●●● (saved · use Clear Config to remove)" : "ghp_… (PAT with actions:write)";
     updateRepoLink();
   }
 
@@ -732,13 +743,22 @@
   }
 
   function saveCfg() {
-    const o = $("cfgOwner"), r = $("cfgRepo"), b = $("cfgBranch");
+    const o = $("cfgOwner"), r = $("cfgRepo"), b = $("cfgBranch"), t = $("cfgToken");
     cfg.owner  = (o ? o.value.trim() : "") || "www-infinity";
     cfg.repo   = (r ? r.value.trim() : "") || "Unifier";
     cfg.branch = (b ? b.value.trim() : "") || "main";
     localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+    if (t) {
+      const tok = t.value.trim();
+      if (tok) {
+        localStorage.setItem(GHP_TOKEN_KEY, tok);
+        t.value = "";
+      }
+    }
     updateRepoLink();
-    log(`✅ Config saved: ${cfg.owner}/${cfg.repo} @ ${cfg.branch}`, "ok");
+    pushCfgToInputs();
+    const active = getAuthToken() ? " · GHP token active" : "";
+    log(`✅ Config saved: ${cfg.owner}/${cfg.repo} @ ${cfg.branch}${active}`, "ok");
   }
 
   function loadCfg() {
@@ -753,9 +773,10 @@
 
   function clearCfg() {
     localStorage.removeItem(CFG_KEY);
+    localStorage.removeItem(GHP_TOKEN_KEY);
     cfg = { owner: "www-infinity", repo: "Unifier", branch: "main" };
     pushCfgToInputs();
-    log("🗑️  Config cleared.", "warn");
+    log("🗑️  Config cleared (including GHP token).", "warn");
   }
 
   /* ------------------------------------------------------------------
@@ -1134,7 +1155,7 @@
     if (getAuthToken() && cfg.owner && cfg.repo) {
       log(`✅ Repo: ${cfg.owner}/${cfg.repo} — GHP active, spins will be committed.`, "ok");
     } else {
-      log("⚠️  No GHP secret — spins are local only.", "warn");
+      log("⚠️  No GHP secret — spins are local only. (Admin: set GHP token in ⚙️ Config panel)", "warn");
     }
   }
 
