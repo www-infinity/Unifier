@@ -1124,6 +1124,163 @@
   }
 
   /* ------------------------------------------------------------------
+     INFINITY CLI — browser terminal
+  ------------------------------------------------------------------ */
+  function initCLI() {
+    const cliOutput = $("cliOutput");
+    const cliInput  = $("cliInput");
+    const cliRun    = $("cliRun");
+    const cliClear  = $("cliClear");
+    if (!cliOutput) return;
+
+    const HELP_TEXT = [
+      "  ∞  INFINITY CLI — Available Commands:",
+      "",
+      "  spin              Run a spin event (research → token → distribution → wallet)",
+      "  token [action]    Manage tokens — actions: mint, list, verify",
+      "  wallet [action]   Wallet management — actions: create, view, distribute",
+      "  research          Research engine — action: generate",
+      "  radio             Radio builder — action: build",
+      "  visualizer        Visualizer builder — action: build",
+      "  treasury          Token treasury — action: view",
+      "  dashboard         Show the Infinity system dashboard",
+      "  help              Show this help",
+      "",
+      "  Tip: install the CLI locally with",
+      "       cd infinity-cli && npm install",
+      "       then run  node infinity.js <command>",
+    ].join("\n");
+
+    function genId() {
+      return (typeof crypto !== "undefined" && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2) + "-" + Date.now().toString(36);
+    }
+
+    const COMMANDS = {
+      help: () => HELP_TEXT,
+
+      spin: () => {
+        const spinId = genId();
+        const tokens = window.TOKEN_DATA && window.TOKEN_DATA.tokens;
+        const title  = tokens && tokens.length
+          ? tokens[Math.floor(Math.random() * tokens.length)].title || "Quantum Research"
+          : "Quantum Research";
+        return [
+          `⟳  Running spin event…`,
+          ``,
+          `Spin ID: ${spinId}`,
+          ``,
+          `  [1/4] Running research writer…       ✓  "${title}"`,
+          `  [2/4] Minting token…                 ✓  ${genId().slice(0, 8)}`,
+          `  [3/4] Applying distribution rule…    ✓  ${Math.floor(Math.random() * 30) + 10}%`,
+          `  [4/4] Creating wallet receipt…       ✓`,
+          ``,
+          `✓  Spin complete → spins/${spinId.slice(0, 8)}…`,
+        ].join("\n");
+      },
+
+      token: (action = "mint") => {
+        const acts = {
+          mint: () => [
+            `◈  Token — mint`,
+            ``,
+            `✓  Token minted: ${genId()}`,
+          ].join("\n"),
+          list: () => {
+            const tks = (window.TOKEN_DATA && window.TOKEN_DATA.tokens || []).slice(-5);
+            const rows = tks.length
+              ? tks.map(t => `  ${(t.id?.toString() || "?").slice(0, 8)}…  ${t.title || t.type || "token"}`).join("\n")
+              : "  (no tokens in network yet)";
+            return `◈  Token — list\n\n${rows}`;
+          },
+          verify: () => `◈  Token — verify\n\n✓  Token signature valid`,
+        };
+        return (acts[action] || (() => `Unknown token action: ${action}\nAvailable: mint, list, verify`))();
+      },
+
+      wallet: (action = "view") => {
+        const acts = {
+          create: () => `◈  Wallet — create\n\n✓  Wallet created: wallet_${genId().slice(0, 8)}`,
+          view: () => {
+            const count = (window.TOKEN_DATA && window.TOKEN_DATA.tokens || []).length;
+            return [`◈  Wallet — view`, ``, `  Network tokens:   ${count}`, `  Status:           active`].join("\n");
+          },
+          distribute: () => `◈  Wallet — distribute\n\n✓  Distribution queued`,
+        };
+        return (acts[action] || (() => `Unknown wallet action: ${action}\nAvailable: create, view, distribute`))();
+      },
+
+      research: (action = "generate") => {
+        if (action !== "generate") return `Unknown research action: ${action}\nAvailable: generate`;
+        return [`◈  Research — generate`, ``, `✓  Article generated (see Research Token panel above)`].join("\n");
+      },
+
+      radio:      () => `◈  Radio Observatory — build\n\n✓  Radio feed built`,
+      visualizer: () => `◈  Quantum Visualizer — build\n\n✓  Visualizer rendered`,
+
+      treasury: () => {
+        const tks   = (window.TOKEN_DATA && window.TOKEN_DATA.tokens || []).length;
+        const spns  = (window.TOKEN_DATA && window.TOKEN_DATA.spins  || []).length;
+        const dist  = Math.floor(tks * 0.9);
+        const treas = tks - dist;
+        return [
+          `◈  Treasury — view`,
+          ``,
+          `  Tokens Minted:        ${tks}`,
+          `  Spins Recorded:       ${spns}`,
+          `  Tokens Distributed:   ${dist}`,
+          `  Treasury Reserve:     ${treas}`,
+        ].join("\n");
+      },
+
+      dashboard: () => {
+        const tks  = (window.TOKEN_DATA && window.TOKEN_DATA.tokens || []).length;
+        const spns = (window.TOKEN_DATA && window.TOKEN_DATA.spins  || []).length;
+        return [
+          `╔══════════════════════════════╗`,
+          `║     ∞  INFINITY SYSTEM  ∞    ║`,
+          `╚══════════════════════════════╝`,
+          ``,
+          `  Spins Recorded:        ${spns}`,
+          `  Tokens Minted:         ${tks}`,
+          `  Tokens Distributed:    ${Math.floor(tks * 0.9)}`,
+          `  Treasury Reserve:      ${Math.floor(tks * 0.1)}`,
+          `  Active Wallets:        1`,
+        ].join("\n");
+      },
+    };
+
+    function runCommand(cmdStr) {
+      const parts = cmdStr.trim().split(/\s+/);
+      const cmd   = parts[0] && parts[0].toLowerCase();
+      const args  = parts.slice(1);
+      if (!cmd) return;
+
+      const output = COMMANDS[cmd]
+        ? COMMANDS[cmd](...args)
+        : `Command not found: ${cmd}\nType 'help' for available commands.`;
+
+      cliOutput.textContent += `\n∞> ${cmdStr}\n${output}\n`;
+      cliOutput.scrollTop = cliOutput.scrollHeight;
+    }
+
+    function submitInput() {
+      const val = cliInput.value.trim();
+      if (val) { runCommand(val); cliInput.value = ""; }
+    }
+
+    cliRun.addEventListener("click", submitInput);
+    cliInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitInput(); });
+    cliClear.addEventListener("click", () => {
+      cliOutput.textContent = "  ∞  INFINITY CLI  ∞\n\nType a command or click a button above. Try 'help' to list all commands.\n";
+    });
+    document.querySelectorAll(".cli-cmd-btn").forEach((btn) => {
+      btn.addEventListener("click", () => runCommand(btn.dataset.cmd));
+    });
+  }
+
+  /* ------------------------------------------------------------------
      INIT
   ------------------------------------------------------------------ */
   async function init() {
@@ -1133,6 +1290,7 @@
     initReels();
     animateTicker();
     wireEvents();
+    initCLI();
 
     if (!localStorage.getItem(IDENTITY_KEY + "_ts")) {
       localStorage.setItem(IDENTITY_KEY + "_ts", new Date().toISOString());

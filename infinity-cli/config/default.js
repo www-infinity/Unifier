@@ -8,4 +8,6 @@ module.exports = {
   profilesDir: path.resolve(__dirname, "../profiles"),
   templatesDir: path.resolve(__dirname, "../templates"),
   treasuryFile: path.resolve(__dirname, "../data/treasury.json"),
+  // GitHub Pages deployment URL — update this when hosting under a different org/repo.
+  siteUrl: "https://www-infinity.github.io/Unifier/",
 }
